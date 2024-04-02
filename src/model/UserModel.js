@@ -4,6 +4,7 @@ import {
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
 } from 'firebase/auth';
+
 import { projectAuth } from '@/firebase/config';
 
 export const createAccount = async (email, password) => {
