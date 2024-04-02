@@ -1,16 +1,13 @@
 <template>
-  <div class="auth-container">
-    <form @submit.prevent="submitSignInForm">
-      <input type="email" required placeholder="email" v-model="email" />
-      <input
-        type="password"
-        required
-        placeholder="password"
-        v-model="password"
-      />
+  <div class="auth-view-container">
+    <form @submit.prevent="submitSignInForm" class="auth-form">
+      <label for="email">Email </label><br />
+      <input type="email" required v-model="email" />
+      <label for="Password">Password </label><br />
+      <input type="password" required v-model="password" />
       <button type="submit">Log in</button>
     </form>
-    <button @click="clickForgotPassword">Forgot Password?</button>
+    <span @click="clickForgotPassword">Forgot Password?</span>
     <div class="error" v-if="error">{{ error }}</div>
   </div>
 </template>
@@ -45,12 +42,24 @@ export default {
 </script>
 
 <style>
-.auth-container {
-  text-align: center;
-  /* Additional styling */
+.auth-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.auth-form {
+  width: 100%; /* Ensures form elements align with the container's width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+}
+
 .error {
   color: red;
-  /* Additional error styling */
 }
 </style>
