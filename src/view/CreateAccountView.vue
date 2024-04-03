@@ -1,11 +1,18 @@
 <template>
-  <form @submit.prevent="handleSubmit">
-    <input type="text" required placeholder="username" v-model="userName" />
-    <input type="email" required placeholder="email" v-model="email" />
-    <input type="password" required placeholder="password" v-model="password" />
-    <div class="error">{{ error }}</div>
-    <button type="submit">Sign up</button>
-  </form>
+  <div class="auth-view-container">
+    <form @submit.prevent="handleSubmit" class="auth-form">
+      <input type="text" required placeholder="username" v-model="userName" />
+      <input type="email" required placeholder="email" v-model="email" />
+      <input
+        type="password"
+        required
+        placeholder="password"
+        v-model="password"
+      />
+      <div class="error">{{ error }}</div>
+      <button type="submit">Sign up</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -23,7 +30,7 @@ export default {
       await signup(email.value, password.value, userName.value);
       if (!error.value) {
         console.log("User signed up successfully");
-        context.emit("signup");
+        context.emit("signup-success");
       }
     };
 
@@ -33,4 +40,24 @@ export default {
 </script>
 
 <style>
+.auth-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-form {
+  width: 100%; /* Ensures form elements align with the container's width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+}
 </style>

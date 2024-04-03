@@ -1,13 +1,24 @@
 <!-- /src/view/ProfileView.vue -->
 <template>
-  <div v-if="user">
+  <div v-if="user" class="profile-container">
     <h2>Profile Information</h2>
-    <!-- Existing profile information display -->
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>UID:</strong> {{ user.uid }}</p>
-    <p><strong>displayName:</strong> {{ user.displayName }}</p>
-    <p><strong>photoURL:</strong> {{ user.photoURL }}</p>
-    <p><strong>emailVerified:</strong> {{ user.emailVerified }}</p>
+    <div class="user-info">
+      <p>
+        <strong>Email:</strong> <span>{{ user.email }}</span>
+      </p>
+      <p>
+        <strong>UID:</strong> <span>{{ user.uid }}</span>
+      </p>
+      <p>
+        <strong>displayName:</strong> <span>{{ user.displayName }}</span>
+      </p>
+      <p>
+        <strong>photoURL:</strong> <span>{{ user.photoURL }}</span>
+      </p>
+      <p>
+        <strong>emailVerified:</strong> <span>{{ user.emailVerified }}</span>
+      </p>
+    </div>
     <!-- Password update form -->
     <h3>Update Password</h3>
     <form @submit.prevent="changePassword(currentPassword, newPassword)">
@@ -63,4 +74,47 @@ export default {
 };
 </script>
 
-  
+<style scoped>
+.profile-container {
+  width: 370px;
+  background-color: #f5f4f4;
+  padding: 20px; /* Adds some padding around the content */
+  margin: auto; /* Centers the container */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+}
+
+.user-info p {
+  margin: 10px 0; /* Adds some spacing between each piece of information */
+}
+
+.user-info p strong {
+  display: block; /* Makes the label appear above the user info */
+}
+
+input[type="email"],
+input[type="password"],
+button {
+  display: block; /* Ensure inputs and button take the full width */
+  width: 100%; /* Use the full width of the parent container */
+  margin: 10px 0; /* Adds some spacing */
+  box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+}
+
+button {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #333; /* Darkens the button on hover */
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+</style>

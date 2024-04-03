@@ -71,7 +71,8 @@ export default {
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
   width: calc(19rem - 4rem); /* Adjusts width considering padding */
   height: 2rem;
   margin: 0.5rem 0; /* Adds a bit of margin for spacing */
@@ -95,7 +96,7 @@ button:hover {
 }
 
 .error {
-  color: red;
+  color: white;
   margin-top: 1rem;
 }
 
