@@ -1,11 +1,15 @@
 <template>
   <div class="auth-view-container">
     <form @submit.prevent="submitSignInForm" class="auth-form">
-      <label for="email">Email </label><br />
-      <input type="email" required v-model="email" />
-      <label for="Password">Password </label><br />
-      <input type="password" required v-model="password" />
-      <button type="submit">Log in</button>
+      <FloatLabel>
+        <InputText id="email" v-model="email" required />
+        <label for="email">Email</label>
+      </FloatLabel>
+      <FloatLabel>
+        <Password v-model="password" inputId="password" :feedback="false" />
+        <label for="password">Password</label>
+      </FloatLabel>
+      <Button label="Sign In" type="submit" />
     </form>
     <span @click="clickForgotPassword">Forgot Password?</span>
     <div class="error" v-if="error">{{ error }}</div>
@@ -42,24 +46,4 @@ export default {
 </script>
 
 <style>
-.auth-view-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.auth-form {
-  width: 100%; /* Ensures form elements align with the container's width */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-button {
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-}
 </style>
