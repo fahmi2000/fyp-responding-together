@@ -85,3 +85,12 @@ export const updateEmail = async (user, newEmail) => {
         return { success: false, error: error.message };
     }
 };
+
+export const validateOfficerForm = (officerData) => {
+    // Simple validation logic; should be extended as needed
+    if (officerData.email && officerData.password) {
+        return { valid: true };
+    } else {
+        return { valid: false };
+    }
+};
