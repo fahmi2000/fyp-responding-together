@@ -4,7 +4,8 @@ import router from './router';
 import { projectAuth } from './firebase/config';
 
 import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/md-light-deeppurple/theme.css'
+import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+import 'primeflex/primeflex.css';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import Password from 'primevue/password';

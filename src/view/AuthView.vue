@@ -1,19 +1,17 @@
 <template>
-  <div class="auth-view-container">
-    <form @submit.prevent="submitSignInForm" class="auth-form">
-      <FloatLabel>
-        <InputText id="email" v-model="email" required />
-        <label for="email">Email</label>
-      </FloatLabel>
-      <FloatLabel>
-        <Password v-model="password" inputId="password" :feedback="false" />
-        <label for="password">Password</label>
-      </FloatLabel>
-      <Button label="Sign In" type="submit" />
-    </form>
-    <span @click="clickForgotPassword">Forgot Password?</span>
-    <div class="error" v-if="error">{{ error }}</div>
-  </div>
+  <form @submit.prevent="submitSignInForm" class="auth-form">
+    <FloatLabel>
+      <InputText id="email" v-model="email" required />
+      <label for="email">Email</label>
+    </FloatLabel>
+    <FloatLabel>
+      <Password v-model="password" inputId="password" :feedback="false" />
+      <label for="password">Password</label>
+    </FloatLabel>
+    <Button label="Sign In" type="submit" />
+  </form>
+  <span @click="clickForgotPassword">Forgot Password?</span>
+  <div class="error" v-if="error">{{ error }}</div>
 </template>
 
 <script>

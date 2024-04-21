@@ -1,21 +1,45 @@
 <template>
-  <div class="landing-page container">
-    <!-- Correct class reference -->
-    <div class="auth-container" v-if="showLogin">
-      <h2>Login</h2>
-      <AuthView @login-success="gotoDashboard" />
-      <p>
-        Don't have an account yet?
-        <span @click="showLogin = false" class="bold">Register</span>
-      </p>
+  <div class="grid min-h-screen">
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">1</div>
     </div>
-
-    <div v-else class="auth-container">
-      <CreateAccountView @signup-success="gotoDashboard" />
-      <p>
-        Have account?
-        <span @click="showLogin = true" class="bold">Login</span>
-      </p>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">2</div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">3</div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">4</div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">5</div>
+      <div class="auth-container" v-if="showLogin">
+        <AuthView @login-success="gotoDashboard" />
+        <p>
+          Don't have an account yet?
+          <span @click="showLogin = false" class="bold">Register</span>
+        </p>
+      </div>
+      <div v-else class="auth-container">
+        <CreateAccountView @signup-success="gotoDashboard" />
+        <p>
+          Have account?
+          <span @click="showLogin = true" class="bold">Login</span>
+        </p>
+      </div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">6</div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">7</div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">8</div>
+    </div>
+    <div class="col-4 h-auto">
+      <div class="text-center p-3 border-round bg-primary font-bold">9</div>
     </div>
   </div>
 </template>
@@ -46,5 +70,11 @@ export default {
 </script>
 
 <style>
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
 </style>
 

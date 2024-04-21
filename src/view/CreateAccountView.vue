@@ -40,24 +40,4 @@ export default {
 </script>
 
 <style>
-.auth-view-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.auth-form {
-  width: 100%; /* Ensures form elements align with the container's width */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-button {
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-}
 </style>
