@@ -79,3 +79,35 @@ export const updateEmail = async (user, newEmail) => {
         return { success: false, error: error.message };
     }
 };
+
+// server-side logic
+import { getFunctions, httpsCallable } from 'firebase/functions';
+
+const functions = getFunctions();
+
+const addUserWithRoleFunction = httpsCallable(functions, 'addUserWithRole');
+const listUsersFunction = httpsCallable(functions, 'listUsers');
+const listOfficersFunction = httpsCallable(functions, 'listOfficers');
+const deleteUserFunction = httpsCallable(functions, 'deleteUser');
+
+export const UserModel = {
+    addUserWithRole: async (userData) => {
+        const result = await addUserWithRoleFunction(userData);
+        return result;
+    },
+
+    listUsers: async () => {
+        const result = await listUsersFunction();
+        return result.data.users;  // Return just the users array
+    },
+
+    listOfficers: async () => {
+        const result = await listOfficersFunction();
+        return result.data.users; // Return just the users array
+    },
+
+    deleteUser: async (uid) => {
+        const result = await deleteUserFunction({ uid });
+        return result.data;
+    },
+};

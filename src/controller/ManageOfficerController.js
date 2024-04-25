@@ -1,27 +1,36 @@
-import { ref } from 'vue';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import { UserModel } from '@/model/UserModel';
 
-const functions = getFunctions();
-
-const createUserFunction = httpsCallable(functions, 'createUser');
-
-export const useManageOfficerController = () => {
-    const message = ref('');
-
-    const createUser = async (userData) => {
-        message.value = 'Creating user...';
-
+export const ManageOfficerController = {
+    addUser: async (userData) => {
         try {
-            const result = await createUserFunction(userData);
-            message.value = `User created successfully: ${result.data.uid}`;
+            const result = await UserModel.addUserWithRole(userData);
+            return result;
         } catch (error) {
-            console.error('Failed to create user:', error);
-            message.value = `Error: ${error.message}`;
+            throw error;
         }
-    };
-
-    return {
-        message,
-        createUser,
-    };
+    },
+    getUsers: async () => {
+        try {
+            const users = await UserModel.listUsers();
+            return users;
+        } catch (error) {
+            throw error;
+        }
+    },
+    getOfficers: async () => {
+        try {
+            const officers = await UserModel.listOfficers();
+            return officers;
+        } catch (error) {
+            throw error;
+        }
+    },
+    deleteUser: async (uid) => {
+        try {
+            const result = await UserModel.deleteUser(uid);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
