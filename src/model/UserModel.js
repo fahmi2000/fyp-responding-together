@@ -10,16 +10,18 @@ import {
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
 import { projectAuth } from '@/firebase/config';
-import { ref } from 'vue'; // Import ref from Vue for reactivity
+import { ref } from 'vue';
 
-// Reactive reference for the current user
-const currentUser = ref(null);
+const user = ref()
 
-// Listen for auth state changes and update currentUser accordingly
-onAuthStateChanged(projectAuth, (_user) => {
-    console.log('User state change, current user is:', _user);
-    currentUser.value = _user; // Update the currentUser reactive reference
-});
+projectAuth.onAuthStateChanged(_user => {
+    console.log('user state change, current user is: ', _user)
+    user.value = _user
+})
+
+export const getUser = () => {
+    return { user }
+}
 
 export const createAccount = async (email, password) => {
     return createUserWithEmailAndPassword(projectAuth, email, password);
@@ -45,12 +47,6 @@ export const signOut = async () => {
     }
 };
 
-// Export a function to get the current user
-export const getCurrentUser = () => {
-    return currentUser;
-};
-
-// Reauthenticate user
 export const reauthenticate = async (user, currentPassword) => {
     const credential = EmailAuthProvider.credential(user.email, currentPassword);
     try {
@@ -62,7 +58,6 @@ export const reauthenticate = async (user, currentPassword) => {
     }
 };
 
-// Update user password
 export const updatePassword = async (user, newPassword) => {
     try {
         await firebaseUpdatePassword(user, newPassword);
@@ -74,7 +69,6 @@ export const updatePassword = async (user, newPassword) => {
     }
 };
 
-// Function to update user's email
 export const updateEmail = async (user, newEmail) => {
     try {
         await firebaseUpdateEmail(user, newEmail);
@@ -83,14 +77,5 @@ export const updateEmail = async (user, newEmail) => {
     } catch (error) {
         console.error(`Email update error: ${error.message}`);
         return { success: false, error: error.message };
-    }
-};
-
-export const validateOfficerForm = (officerData) => {
-    // Simple validation logic; should be extended as needed
-    if (officerData.email && officerData.password) {
-        return { valid: true };
-    } else {
-        return { valid: false };
     }
 };

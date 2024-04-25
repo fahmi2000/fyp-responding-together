@@ -47,7 +47,7 @@
 
 <script>
 import CreateAccountView from "@/view/CreateAccountView.vue";
-import AuthView from "@/view/AuthView.vue"; // Updated import for AuthView
+import AuthView from "@/view/AuthView.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 

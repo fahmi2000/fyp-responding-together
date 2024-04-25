@@ -1,9 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getFirestore, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getFunctions } from 'firebase/functions';
 
-// TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDZfkkIkRCg5xHB3Qz2WeQYgsyeF_QjMos",
     authDomain: "fyp2-rt.firebaseapp.com",
@@ -13,16 +12,13 @@ const firebaseConfig = {
     appId: "1:733056774104:web:94433a1c0958d6485dccad"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase services
 const projectAuth = getAuth(app);
 const projectFirestore = getFirestore(app);
+const functions = getFunctions(app);
 
-// New way to get a timestamp
 const timestamp = serverTimestamp;
 
 export {
-    projectAuth, projectFirestore, timestamp
+    projectAuth, projectFirestore, timestamp, functions
 };

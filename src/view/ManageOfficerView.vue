@@ -1,64 +1,35 @@
 <template>
   <div>
-    <button @click="addOfficer">Add Officer</button>
-    <div v-if="showForm">
-      <form @submit.prevent="submitOfficerForm">
-        <!-- Officer form fields -->
-        <input
-          v-model="officerData.email"
-          type="email"
-          placeholder="Email"
-          required
-        />
-        <input
-          v-model="officerData.password"
-          type="password"
-          placeholder="Password"
-          required
-        />
-        <!-- More fields as necessary -->
-        <button type="submit">Submit</button>
-        <button @click="cancelOfficerForm">Cancel</button>
-      </form>
-    </div>
-    <!-- Feedback Messages -->
-    <p v-if="message">{{ message }}</p>
+    <button @click="addUser">Add User</button>
   </div>
 </template>
   
   <script>
-import { ref } from "vue";
-import { useManageOfficerController } from "@/controller/ManageOfficerController";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 export default {
-  setup() {
-    const {
-      requestAddOfficerForm,
-      submitOfficerForm,
-      cancelSubmitOfficerForm,
-    } = useManageOfficerController();
-    const showForm = ref(false);
-    const officerData = ref({ email: "", password: "" });
-    const message = ref("");
+  name: "ManagerOfficeView",
+  methods: {
+    async addUser() {
+      const functions = getFunctions();
+      const addUserWithRole = httpsCallable(functions, "addUserWithRole");
 
-    function addOfficer() {
-      showForm.value = true;
-    }
+      // Example data passed to the function
+      const userData = {
+        email: "newuser3@example.com",
+        password: "strongpassword",
+        role: "editor",
+      };
 
-    function cancelOfficerForm() {
-      showForm.value = false;
-      officerData.value = { email: "", password: "" }; // Reset form
-      cancelSubmitOfficerForm();
-    }
-
-    return {
-      addOfficer,
-      submitOfficerForm,
-      cancelOfficerForm,
-      showForm,
-      officerData,
-      message,
-    };
+      addUserWithRole(userData)
+        .then((result) => {
+          alert("User added: " + result.data.message);
+        })
+        .catch((error) => {
+          console.error("Error adding user:", error);
+          alert("Failed to add user: " + error.message);
+        });
+    },
   },
 };
 </script>

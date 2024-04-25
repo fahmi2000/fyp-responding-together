@@ -1,6 +1,6 @@
 import { ref, onMounted } from 'vue';
 import { projectAuth } from "@/firebase/config";
-import { getCurrentUser, reauthenticate, updatePassword, updateEmail } from '@/model/UserModel';
+import { getUser, reauthenticate, updatePassword, updateEmail } from '@/model/UserModel';
 
 const user = ref(null);
 const error = ref('');

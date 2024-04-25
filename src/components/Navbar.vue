@@ -3,7 +3,7 @@
     <div class="left-content">
       <!-- Icon and Text on the Far Left -->
       <div class="brand">
-        <img src="../assets/logo.svg" alt="Icon" class="icon" />
+        <img src="" alt="Icon" class="icon" />
         <div class="brand-content">
           <span class="brand-text">RESPONDING</span>
           <span class="brand-text">TOGETHER</span>
@@ -40,12 +40,12 @@
 <script>
 import { useAuthController } from "@/controller/AuthController";
 import { useRouter, useRoute } from "vue-router";
-import getUser from "@/composables/getUser";
+import { getUser } from "@/model/UserModel";
 
 export default {
   setup() {
     const { requestSignOut, error } = useAuthController();
-    const { user } = getUser(); // Make sure getUser is updated to return the reactive user object
+    const { user } = getUser();
     const router = useRouter();
     const route = useRoute();
 
