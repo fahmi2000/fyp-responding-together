@@ -1,43 +1,39 @@
 <template>
-  <div v-if="loading">Loading weather data...</div>
-  <div v-else>
-    <h1>Weather Forecast for {{ weatherData[0].location.location_name }}</h1>
-    <div v-if="error">Error: {{ error }}</div>
+  <div>
+    <h1>Weather Forecast</h1>
+    <div v-if="loading">Loading...</div>
+    <div v-else-if="error">Error: {{ error }}</div>
     <div v-else>
-      <div v-for="forecast in weatherData" :key="forecast.date">
-        <h2>{{ forecast.date }}</h2>
-        <p>Morning: {{ forecast.morning_forecast }}</p>
-        <p>Afternoon: {{ forecast.afternoon_forecast }}</p>
-        <p>Night: {{ forecast.night_forecast }}</p>
-        <p>
-          Summary: {{ forecast.summary_forecast }} ({{ forecast.summary_when }})
-        </p>
-        <p>Temperature: {{ forecast.min_temp }} - {{ forecast.max_temp }}°C</p>
-      </div>
+      <DataTable :value="weatherData">
+        <Column field="datatype" header="Data Type"></Column>
+        <Column field="value" header="Value"></Column>
+        <Column field="attributes.valid_from" header="Valid From"></Column>
+      </DataTable>
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import { ref, onMounted } from "vue";
 import { WeatherController } from "@/controller/WeatherController";
 
 export default {
-  data() {
-    return {
-      loading: true,
-      error: null,
-      weatherData: null,
-    };
-  },
-  async created() {
-    try {
-      this.weatherData = await WeatherController.fetchWeatherForecast();
-      this.loading = false;
-    } catch (error) {
-      this.error = error.message;
-      this.loading = false;
-    }
+  setup() {
+    const loading = ref(true);
+    const error = ref(null);
+    const weatherData = ref(null);
+
+    onMounted(async () => {
+      try {
+        weatherData.value = await WeatherController.fetchWeatherForecast();
+      } catch (err) {
+        error.value = err.message;
+      } finally {
+        loading.value = false;
+      }
+    });
+
+    return { loading, error, weatherData };
   },
 };
 </script>
-  

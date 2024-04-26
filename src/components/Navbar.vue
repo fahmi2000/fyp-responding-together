@@ -63,28 +63,28 @@ export default {
         },
       },
       {
-        label: "Task",
+        label: "Tasks",
         icon: "pi pi-fw pi-list-check",
         command: () => {
           navigateTo("Profile");
         },
       },
       {
-        label: "User",
+        label: "Users",
         icon: "pi pi-fw pi-address-book",
         command: () => {
           navigateTo("Users");
         },
       },
       {
-        label: "Location",
+        label: "Locations",
         icon: "pi pi-fw pi-money-bill",
         command: () => {
           navigateTo("Profile");
         },
       },
       {
-        label: "Disaster",
+        label: "Disasters",
         icon: "pi pi-fw pi-exclamation-circle",
         command: () => {
           navigateTo("Profile");

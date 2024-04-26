@@ -16,26 +16,24 @@
 
 <script>
 import { ref } from "vue";
-import { useAuthController } from "@/controller/AuthController"; // Ensure path is correct
+import { useAuthController } from "@/controller/AuthController";
 
 export default {
   setup(props, context) {
     const email = ref("");
     const password = ref("");
-    const { error, requestSignIn, requestForgotPassword } = useAuthController(); // Adjust based on updated AuthController
+    const { error, requestSignIn, requestForgotPassword } = useAuthController();
 
     const submitSignInForm = async () => {
       const result = await requestSignIn(email.value, password.value);
       if (result === "redirectDashboard") {
         console.log("User logged in");
-        // Directly navigate or emit event for parent component to handle navigation
         context.emit("login-success");
       }
     };
 
     const clickForgotPassword = async () => {
-      await requestForgotPassword(email.value); // Assuming email input for password reset
-      // Optionally handle feedback to the user about password reset email sent
+      await requestForgotPassword(email.value);
     };
 
     return { email, password, error, submitSignInForm, clickForgotPassword };

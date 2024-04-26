@@ -13,6 +13,11 @@ import Password from 'primevue/password';
 import Button from 'primevue/button';
 import Menubar from 'primevue/menubar';
 import Dropdown from 'primevue/dropdown';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';   // optional
+import Row from 'primevue/row';                   // optional
+
 
 let app;
 
@@ -28,6 +33,10 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Button', Button);
         app.component('Menubar', Menubar);
         app.component('Dropdown', Dropdown);
+        app.component('DataTable', DataTable);
+        app.component('Column', Column);
+        app.component('ColumnGroup', ColumnGroup);
+        app.component('Row', Row);
 
         app.mount('#app');
     }

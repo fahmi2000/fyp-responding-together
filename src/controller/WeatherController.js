@@ -5,9 +5,10 @@ export const WeatherController = {
     fetchWeatherForecast: async () => {
         const result = await WeatherModel.getWeatherForecast();
         if (result.success) {
-            // Process or transform data if necessary
+            console.log('controller okay')
             return result.data;
         } else {
+            console.log('controller not okay')
             throw new Error(result.error);
         }
     },
