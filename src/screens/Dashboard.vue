@@ -1,7 +1,6 @@
 <template>
   <div>
     <Navbar />
-    <ManageOfficerView />
     <WeatherView />
   </div>
 </template>

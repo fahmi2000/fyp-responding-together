@@ -1,103 +1,99 @@
-
 <template>
-  <div class="card">
-    <Menubar :model="items">
-      <template #item="{ item, props, hasSubmenu }">
-        <router-link
-          v-if="item.route"
-          v-slot="{ href, navigate }"
-          :to="item.route"
-          custom
-        >
-          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-            <span :class="item.icon" />
-            <span class="ml-2">{{ item.label }}</span>
+  <Menubar v-if="user" :model="items">
+    <template #start>
+      <div class="brand">
+        <div class="brand-content">
+          <span class="brand-text" style="padding-right: 2rem"
+            >RESPONDING TOGETHER</span
+          >
+        </div>
+      </div>
+    </template>
+
+    <template #item="{ item, props }">
+      <a v-ripple class="flex align-items-center" v-bind="props.action">
+        <span :class="item.icon" />
+        <span class="ml-2">{{ item.label }}</span>
+      </a>
+    </template>
+
+    <template #end>
+      <div class="dropdown">
+        <div class="dropdown-content">
+          <a @click="navigateTo('Profile')" class="dropdown-item">
+            <i class="pi pi-user"></i>
+            <span style="padding-left: 10px">Profile</span>
           </a>
-        </router-link>
-        <a
-          v-else
-          v-ripple
-          :href="item.url"
-          :target="item.target"
-          v-bind="props.action"
-        >
-          <span :class="item.icon" />
-          <span class="ml-2">{{ item.label }}</span>
-          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
-        </a>
-      </template>
-    </Menubar>
-  </div>
+          <a
+            @click="handleLogoutClick"
+            class="dropdown-item"
+            style="padding-left: 10px"
+          >
+            <i class="pi pi-sign-out"></i>
+            <span style="padding-left: 10px">Logout</span>
+          </a>
+        </div>
+      </div>
+    </template>
+  </Menubar>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-const items = ref([
-  {
-    label: "Router",
-    icon: "pi pi-palette",
-    items: [
-      {
-        label: "Styled",
-        route: "/theming",
-      },
-      {
-        label: "Unstyled",
-        route: "/unstyled",
-      },
-    ],
-  },
-  {
-    label: "Programmatic",
-    icon: "pi pi-link",
-    command: () => {
-      router.push("/introduction");
-    },
-  },
-  {
-    label: "External",
-    icon: "pi pi-home",
-    items: [
-      {
-        label: "Vue.js",
-        url: "https://vuejs.org/",
-      },
-      {
-        label: "Vite.js",
-        url: "https://vuejs.org/",
-      },
-    ],
-  },
-]);
-</script>
-
 
 <script>
 import { useAuthController } from "@/controller/AuthController";
 import { useRouter, useRoute } from "vue-router";
 import { getUser } from "@/model/UserModel";
+import Menubar from "primevue/menubar";
 
 export default {
+  components: {
+    Menubar,
+  },
   setup() {
     const { requestSignOut, error } = useAuthController();
     const { user } = getUser();
     const router = useRouter();
     const route = useRoute();
 
+    const items = [
+      {
+        label: "Home",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          navigateTo("Dashboard");
+        },
+      },
+      {
+        label: "Task",
+        icon: "pi pi-fw pi-list-check",
+        command: () => {
+          navigateTo("Profile");
+        },
+      },
+      {
+        label: "User",
+        icon: "pi pi-fw pi-address-book",
+        command: () => {
+          navigateTo("Users");
+        },
+      },
+      {
+        label: "Location",
+        icon: "pi pi-fw pi-money-bill",
+        command: () => {
+          navigateTo("Profile");
+        },
+      },
+      {
+        label: "Disaster",
+        icon: "pi pi-fw pi-exclamation-circle",
+        command: () => {
+          navigateTo("Profile");
+        },
+      },
+    ];
+
     const navigateTo = (name) => {
       router.push({ name });
-    };
-
-    const navigateToHome = () => {
-      navigateTo("Dashboard");
-    };
-
-    const isActive = (routeName) => {
-      return route.name === routeName;
     };
 
     const handleLogoutClick = async () => {
@@ -109,7 +105,7 @@ export default {
     };
 
     // Return all the necessary methods and reactive properties
-    return { handleLogoutClick, user, navigateTo, isActive, navigateToHome };
+    return { handleLogoutClick, user, navigateTo, items };
   },
 };
 </script>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '@/screens/LandingPage.vue'; // Assuming this is your landing page
 import Dashboard from '@/screens/Dashboard.vue';
 import Profile from '@/screens/Profile.vue'; // Import the Profile component
+import Users from '@/screens/Users.vue';
 import { projectAuth } from '@/firebase/config';
 
 // Route guard to check authentication status
@@ -30,11 +31,17 @@ const router = createRouter({
             beforeEnter: requireAuth // Protect the Dashboard route
         },
         {
-            path: '/profile', // Define the path for the profile page
-            name: 'Profile', // Name the route
-            component: Profile, // Set the component to be rendered
-            beforeEnter: requireAuth // Protect the Profile route as well
-        }
+            path: '/profile',
+            name: 'Profile',
+            component: Profile,
+            beforeEnter: requireAuth
+        },
+        {
+            path: '/users',
+            name: 'Users',
+            component: Users,
+            beforeEnter: requireAuth
+        },
     ]
 });
 

@@ -12,6 +12,7 @@ import FloatLabel from 'primevue/floatlabel';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
 import Menubar from 'primevue/menubar';
+import Dropdown from 'primevue/dropdown';
 
 let app;
 
@@ -26,6 +27,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Password', Password);
         app.component('Button', Button);
         app.component('Menubar', Menubar);
+        app.component('Dropdown', Dropdown);
 
         app.mount('#app');
     }
