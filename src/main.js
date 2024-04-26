@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import { projectAuth } from './firebase/config';
 
+import 'primeicons/primeicons.css'
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/md-light-deeppurple/theme.css';
 import 'primeflex/primeflex.css';
@@ -10,8 +11,7 @@ import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
-import TabMenu from 'primevue/tabmenu';
-
+import Menubar from 'primevue/menubar';
 
 let app;
 
@@ -25,7 +25,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('InputText', InputText);
         app.component('Password', Password);
         app.component('Button', Button);
-        app.component('TabMenu', TabMenu);
+        app.component('Menubar', Menubar);
 
         app.mount('#app');
     }

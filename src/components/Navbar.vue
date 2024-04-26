@@ -1,41 +1,80 @@
+
 <template>
-  <nav v-if="user" class="navbar">
-    <div class="left-content">
-      <!-- Icon and Text on the Far Left -->
-      <div class="brand">
-        <img src="" alt="Icon" class="icon" />
-        <div class="brand-content">
-          <span class="brand-text">RESPONDING</span>
-          <span class="brand-text">TOGETHER</span>
-        </div>
-      </div>
-      <!-- Navigation Buttons -->
-      <button
-        class="nav-button"
-        :class="{ active: isActive('Dashboard') }"
-        @click="navigateToHome"
-      >
-        Home
-      </button>
-      <button
-        class="nav-button"
-        :class="{ active: isActive('Profile') }"
-        @click="navigateTo('Profile')"
-      >
-        Profile
-      </button>
-    </div>
-    <div class="right-content">
-      <div class="dropdown">
-        <button class="dropbtn">Menu</button>
-        <div class="dropdown-content">
-          <a @click="navigateTo('Profile')">Profile</a>
-          <a @click="handleLogoutClick">Logout</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div class="card">
+    <Menubar :model="items">
+      <template #item="{ item, props, hasSubmenu }">
+        <router-link
+          v-if="item.route"
+          v-slot="{ href, navigate }"
+          :to="item.route"
+          custom
+        >
+          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+            <span :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+          </a>
+        </router-link>
+        <a
+          v-else
+          v-ripple
+          :href="item.url"
+          :target="item.target"
+          v-bind="props.action"
+        >
+          <span :class="item.icon" />
+          <span class="ml-2">{{ item.label }}</span>
+          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
+        </a>
+      </template>
+    </Menubar>
+  </div>
 </template>
+
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const items = ref([
+  {
+    label: "Router",
+    icon: "pi pi-palette",
+    items: [
+      {
+        label: "Styled",
+        route: "/theming",
+      },
+      {
+        label: "Unstyled",
+        route: "/unstyled",
+      },
+    ],
+  },
+  {
+    label: "Programmatic",
+    icon: "pi pi-link",
+    command: () => {
+      router.push("/introduction");
+    },
+  },
+  {
+    label: "External",
+    icon: "pi pi-home",
+    items: [
+      {
+        label: "Vue.js",
+        url: "https://vuejs.org/",
+      },
+      {
+        label: "Vite.js",
+        url: "https://vuejs.org/",
+      },
+    ],
+  },
+]);
+</script>
+
 
 <script>
 import { useAuthController } from "@/controller/AuthController";
