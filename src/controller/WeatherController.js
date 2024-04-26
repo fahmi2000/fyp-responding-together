@@ -1,5 +1,5 @@
 // WeatherController.js
-import { WeatherModel } from './WeatherModel';
+import { WeatherModel } from '@/model/WeatherModel';
 
 export const WeatherController = {
     fetchWeatherForecast: async () => {
