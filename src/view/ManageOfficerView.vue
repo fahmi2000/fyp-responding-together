@@ -1,8 +1,32 @@
 <template>
   <div>
-    <button @click="addUser">Add User</button>
-    <button @click="listUsers">List Users</button>
-    <button @click="listOfficers">List Officers</button>
+    <form @submit.prevent="addUser">
+      <h3>Add User</h3>
+      <div class="field grid">
+        <div class="col">
+          <InputText v-model="userData.email" placeholder="Email" />
+        </div>
+      </div>
+
+      <div class="field grid">
+        <div class="col">
+          <Password v-model="userData.password" placeholder="Password" />
+        </div>
+      </div>
+
+      <div class="field grid">
+        <div class="col">
+          <Dropdown
+            v-model="selectedRole"
+            :options="roles"
+            optionLabel="name"
+            placeholder="Select a Role"
+          />
+        </div>
+      </div>
+
+      <Button type="submit">Add User</Button>
+    </form>
     <ul>
       <li v-for="officer in officers" :key="officer.uid">
         {{ officer.email }} - {{ officer.role }}
@@ -18,7 +42,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { ManageOfficerController } from "../controller/ManageOfficerController";
 
 export default {
@@ -26,17 +50,22 @@ export default {
   setup() {
     const message = ref("");
     const users = ref([]);
+    const selectedRole = ref();
+    const userData = ref({
+      email: "",
+      password: "",
+      role: selectedRole,
+    });
+
+    const roles = ref([
+      { name: "Officer", value: "Officer" },
+      { name: "Admin", value: "Admin" },
+      { name: "Volunteer", value: "Volunteer" },
+    ]);
 
     const addUser = async () => {
-      // Example data passed to the function
-      const userData = {
-        email: "newuser2@example.com",
-        password: "strongpassword",
-        role: "Officer",
-      };
-
       try {
-        const result = await ManageOfficerController.addUser(userData);
+        const result = await ManageOfficerController.addUser(userData.value);
         message.value = "User added: " + result.data.message;
         alert(message.value);
       } catch (error) {
@@ -78,6 +107,11 @@ export default {
       }
     };
 
+    onMounted(async () => {
+      await listUsers();
+      await listOfficers();
+    });
+
     return {
       addUser,
       listUsers,
@@ -85,6 +119,9 @@ export default {
       listOfficers,
       users,
       officers,
+      userData,
+      roles,
+      selectedRole,
     };
   },
 };
