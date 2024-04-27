@@ -1,49 +1,85 @@
 <!-- /src/view/ProfileView.vue -->
 <template>
-  <div v-if="user" class="profile-container">
-    <h2>Profile Information</h2>
-    <div class="user-info">
-      <p>
-        <strong>Email:</strong> <span>{{ user.email }}</span>
-      </p>
-      <p>
-        <strong>UID:</strong> <span>{{ user.uid }}</span>
-      </p>
-      <p>
-        <strong>displayName:</strong> <span>{{ user.displayName }}</span>
-      </p>
-      <p>
-        <strong>photoURL:</strong> <span>{{ user.photoURL }}</span>
-      </p>
-      <p>
-        <strong>emailVerified:</strong> <span>{{ user.emailVerified }}</span>
-      </p>
+  <div v-if="user">
+    <div class="center-icon">
+      <i class="pi pi-user" style="font-size: 15rem"></i>
     </div>
-    <!-- Password update form -->
-    <h3>Update Password</h3>
-    <form @submit.prevent="changePassword(currentPassword, newPassword)">
-      <input
-        type="password"
-        v-model="currentPassword"
-        placeholder="Current Password"
-        required
-      />
-      <input
-        type="password"
-        v-model="newPassword"
-        placeholder="New Password"
-        required
-      />
-      <button type="submit">Update Password</button>
-    </form>
-    <!-- Email update form -->
-    <h3>Update Email</h3>
-    <form @submit.prevent="changeEmail(newEmail)">
-      <input type="email" v-model="newEmail" placeholder="New Email" required />
-      <button type="submit">Update Email</button>
-    </form>
-    <p v-if="error" class="error">{{ error }}</p>
+    <Divider />
+    <div class="card flex justify-content-end">
+      <Button @click="visible = true" label="Edit" severity="contrast" />
+      <Dialog
+        v-model:visible="visible"
+        modal
+        header="Edit Profile"
+        :style="{ width: '25rem' }"
+      >
+        <span class="p-text-secondary block mb-5"
+          >Update your information.</span
+        >
+        <form @submit.prevent="changeEmail(newEmail)">
+          <div class="flex align-items-center gap-3 mb-3">
+            <label for="email" class="font-semibold w-6rem">New Email</label>
+            <InputText
+              id="email"
+              class="flex-auto"
+              autocomplete="off"
+              v-model="newEmail"
+            />
+          </div>
+
+          <div class="flex justify-content-end gap-2">
+            <Button
+              type="submit"
+              label="Update Email"
+              severity="contrast"
+            ></Button>
+          </div>
+        </form>
+        <Divider />
+        <form @submit.prevent="changePassword(currentPassword, newPassword)">
+          <div class="flex align-items-center gap-3 mb-5">
+            <label for="email" class="font-semibold w-6rem">Old Password</label>
+            <Password
+              id="email"
+              class="flex-auto"
+              autocomplete="off"
+              :feedback="false"
+              v-model="currentPassword"
+            />
+          </div>
+          <div class="flex align-items-center gap-3 mb-5">
+            <label for="email" class="font-semibold w-6rem">New Password</label>
+            <Password
+              id="email"
+              class="flex-auto"
+              autocomplete="off"
+              v-model="newPassword"
+            />
+          </div>
+          <div class="flex justify-content-end gap-2">
+            <Button
+              type="submit"
+              label="Update Password"
+              severity="contrast"
+            ></Button>
+          </div>
+          <p v-if="error" class="error">{{ error }}</p>
+        </form>
+      </Dialog>
+    </div>
+    <strong>Name</strong>
+    <p>{{ user.displayName }}</p>
+
+    <strong>Email</strong>
+    <p>{{ user.email }}</p>
+
+    <strong>ID</strong>
+    <p>{{ user.uid }}</p>
+
+    <strong>Location</strong>
+    <p>{ user.location }</p>
   </div>
+
   <div v-else>
     <p>Please log in.</p>
   </div>
@@ -60,6 +96,7 @@ export default {
     const currentPassword = ref("");
     const newPassword = ref("");
     const newEmail = ref("");
+    const visible = ref(false);
 
     return {
       user,
@@ -69,52 +106,17 @@ export default {
       error,
       newEmail,
       changeEmail,
+      visible,
     };
   },
 };
 </script>
 
 <style scoped>
-.profile-container {
-  width: 370px;
-  background-color: #f5f4f4;
-  padding: 20px; /* Adds some padding around the content */
-  margin: auto; /* Centers the container */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
-}
-
-.user-info p {
-  margin: 10px 0; /* Adds some spacing between each piece of information */
-}
-
-.user-info p strong {
-  display: block; /* Makes the label appear above the user info */
-}
-
-input[type="email"],
-input[type="password"],
-button {
-  display: block; /* Ensure inputs and button take the full width */
-  width: 100%; /* Use the full width of the parent container */
-  margin: 10px 0; /* Adds some spacing */
-  box-sizing: border-box; /* Includes padding and border in the element's total width and height */
-}
-
-button {
-  background-color: black;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #333; /* Darkens the button on hover */
-}
-
-.error {
-  color: red;
-  margin-top: 10px;
+.center-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: flex;
 }
 </style>

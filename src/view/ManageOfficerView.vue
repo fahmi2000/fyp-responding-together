@@ -55,18 +55,21 @@
         </div>
       </div>
 
-      <Button type="submit">Add User</Button>
+      <Button type="submit" severity="contrast">Add User</Button>
     </form>
   </Fieldset>
   <Fieldset legend="Officers List" :toggleable="true">
     <DataTable :value="officers">
       <Column field="email" header="Email" sortable></Column>
+      <Column field="displayName" header="Display Name"></Column>
       <Column field="role" header="Role" sortable></Column>
       <Column field="phoneNumber" header="Phone Number"></Column>
       <Column field="emailVerified" header="Email Verified"></Column>
       <Column>
         <template #body="slotProps">
-          <button @click="deleteUser(slotProps.data.uid)">Delete</button>
+          <Button @click="deleteUser(slotProps.data.uid)" severity="danger"
+            >Delete</Button
+          >
         </template>
       </Column>
     </DataTable>

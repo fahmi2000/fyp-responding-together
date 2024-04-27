@@ -1,14 +1,22 @@
 <template>
   <form @submit.prevent="submitSignInForm" class="auth-form">
-    <FloatLabel>
-      <InputText id="email" v-model="email" required />
-      <label for="email">Email</label>
-    </FloatLabel>
-    <FloatLabel>
-      <Password v-model="password" inputId="password" :feedback="false" />
-      <label for="password">Password</label>
-    </FloatLabel>
-    <Button label="Sign In" type="submit" />
+    <div class="flex justify-content-center gap-2 mb-3">
+      <FloatLabel>
+        <InputText id="email" v-model="email" required />
+        <label for="email">Email</label>
+      </FloatLabel>
+    </div>
+    <div class="flex justify-content-center gap-2 mb-3">
+      <FloatLabel>
+        <Password v-model="password" inputId="password" :feedback="false" />
+        <label for="password">Password</label>
+      </FloatLabel>
+    </div>
+    <div class="flex justify-content-center gap-2 mb-3">
+      <Button type="submit" severity="contrast"
+        >Sign In <span class="pi pi-angle-right"></span
+      ></Button>
+    </div>
   </form>
   <span @click="clickForgotPassword">Forgot Password?</span>
   <div class="error" v-if="error">{{ error }}</div>

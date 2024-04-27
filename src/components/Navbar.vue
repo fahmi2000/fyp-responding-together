@@ -1,10 +1,10 @@
 <template>
-  <Menubar v-if="user" :model="items">
+  <Menubar v-if="user" :model="items" class="custom-navbar">
     <template #start>
       <div class="brand">
         <div class="brand-content">
-          <span class="brand-text" style="padding-right: 2rem"
-            >RESPONDING TOGETHER</span
+          <strong class="brand-text" style="padding-right: 2rem"
+            >RESPONDING TOGETHER</strong
           >
         </div>
       </div>
@@ -110,5 +110,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.custom-navbar {
+  background-color: #ff6c5c;
+  border-radius: 20px;
+}
 </style>

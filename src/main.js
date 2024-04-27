@@ -19,8 +19,7 @@ import ColumnGroup from 'primevue/columngroup';
 import Row from 'primevue/row';
 import Dialog from 'primevue/dialog';
 import Fieldset from 'primevue/fieldset';
-
-
+import Divider from 'primevue/divider';
 
 let app;
 
@@ -42,6 +41,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Row', Row);
         app.component('Dialog', Dialog);
         app.component('Fieldset', Fieldset);
+        app.component('Divider', Divider);
 
         app.mount('#app');
     }
