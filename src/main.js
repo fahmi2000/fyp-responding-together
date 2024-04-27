@@ -15,8 +15,11 @@ import Menubar from 'primevue/menubar';
 import Dropdown from 'primevue/dropdown';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row';                   // optional
+import ColumnGroup from 'primevue/columngroup';
+import Row from 'primevue/row';
+import Dialog from 'primevue/dialog';
+import Fieldset from 'primevue/fieldset';
+
 
 
 let app;
@@ -37,6 +40,8 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Column', Column);
         app.component('ColumnGroup', ColumnGroup);
         app.component('Row', Row);
+        app.component('Dialog', Dialog);
+        app.component('Fieldset', Fieldset);
 
         app.mount('#app');
     }

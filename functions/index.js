@@ -6,17 +6,18 @@ admin.initializeApp({
 });
 
 exports.addUserWithRole = functions.https.onCall(async (data) => {
-    const { email, password } = data;
+    const { email, password, displayName, phoneNumber } = data;
 
     try {
         const user = await admin.auth().createUser({
             email: email,
             emailVerified: false,
             password: password,
-            disabled: false
+            disabled: false,
+            displayName: displayName,
+            phoneNumber: phoneNumber
         });
 
-        // Set the custom user claim to 'Officer' statically
         await admin.auth().setCustomUserClaims(user.uid, { role: 'Officer' });
 
         return { message: `User ${email} created with role Officer.` };
@@ -39,6 +40,8 @@ exports.listUsers = functions.https.onCall(async (data, context) => {
                 uid: userRecord.uid,
                 email: userRecord.email,
                 displayName: userRecord.displayName,
+                phoneNumber: userRecord.phoneNumber,
+                emailVerified: userRecord.emailVerified,
                 customClaims: userRecord.customClaims
             };
         });
@@ -70,6 +73,8 @@ exports.listOfficers = functions.https.onCall(async (data, context) => {
                     uid: userRecord.uid,
                     email: userRecord.email,
                     displayName: userRecord.displayName,
+                    phoneNumber: userRecord.phoneNumber,
+                    emailVerified: userRecord.emailVerified,
                     role: userRecord.customClaims.role
                 };
             }));

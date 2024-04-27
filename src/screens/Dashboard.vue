@@ -61,6 +61,7 @@ export default {
 .box {
   width: 100%;
   height: 100%;
+  border-radius: 25px;
 }
 
 .box2 {
@@ -71,7 +72,6 @@ export default {
 
 .box3 {
   grid-area: box3;
-  background-color: #d1d1d1;
 }
 
 .box4 {

@@ -1,16 +1,45 @@
 <template>
-  <div>
+  <Fieldset legend="Add User" :toggleable="true" style="width: 25vw">
     <form @submit.prevent="addUser">
       <h3>Add User</h3>
+
       <div class="field grid">
         <div class="col">
-          <InputText v-model="userData.email" placeholder="Email" />
+          <FloatLabel>
+            <InputText v-model="userData.displayName" style="width: 16.5rem" />
+            <label for="displayName">Name</label>
+          </FloatLabel>
         </div>
       </div>
 
       <div class="field grid">
         <div class="col">
-          <Password v-model="userData.password" placeholder="Password" />
+          <FloatLabel>
+            <InputText v-model="userData.email" style="width: 16.5rem" />
+            <label for="email">Email</label>
+          </FloatLabel>
+        </div>
+      </div>
+
+      <div class="field grid">
+        <div class="col">
+          <FloatLabel>
+            <Password
+              v-model="userData.password"
+              placeholder="Password"
+              toggleMask
+            />
+            <label for="Password">Password</label>
+          </FloatLabel>
+        </div>
+      </div>
+
+      <div class="field grid">
+        <div class="col">
+          <FloatLabel>
+            <InputText v-model="userData.phoneNumber" style="width: 16.5rem" />
+            <label for="Phone Number">Phone Number</label>
+          </FloatLabel>
         </div>
       </div>
 
@@ -21,24 +50,35 @@
             :options="roles"
             optionLabel="name"
             placeholder="Select a Role"
+            style="width: 16.5rem"
           />
         </div>
       </div>
 
       <Button type="submit">Add User</Button>
     </form>
-    <ul>
-      <li v-for="officer in officers" :key="officer.uid">
-        {{ officer.email }} - {{ officer.role }}
-        <button @click="deleteUser(officer.uid)">Delete</button>
-      </li>
-    </ul>
-    <ul>
-      <li v-for="user in users" :key="user.uid">
-        {{ user.email }} - {{ user.displayName }}
-      </li>
-    </ul>
-  </div>
+  </Fieldset>
+  <Fieldset legend="Officers List" :toggleable="true">
+    <DataTable :value="officers">
+      <Column field="email" header="Email" sortable></Column>
+      <Column field="role" header="Role" sortable></Column>
+      <Column field="phoneNumber" header="Phone Number"></Column>
+      <Column field="emailVerified" header="Email Verified"></Column>
+      <Column>
+        <template #body="slotProps">
+          <button @click="deleteUser(slotProps.data.uid)">Delete</button>
+        </template>
+      </Column>
+    </DataTable>
+  </Fieldset>
+  <Fieldset legend="Users List" :toggleable="true">
+    <DataTable :value="users">
+      <Column field="email" header="Email"></Column>
+      <Column field="displayName" header="Display Name"></Column>
+      <Column field="phoneNumber" header="Phone Number"></Column>
+      <Column field="emailVerified" header="Email Verified"></Column>
+    </DataTable>
+  </Fieldset>
 </template>
 
 <script>
@@ -51,9 +91,12 @@ export default {
     const message = ref("");
     const users = ref([]);
     const selectedRole = ref();
+    const visible = ref(false);
     const userData = ref({
       email: "",
       password: "",
+      phoneNumber: "",
+      displayName: "",
       role: selectedRole,
     });
 
@@ -122,6 +165,7 @@ export default {
       userData,
       roles,
       selectedRole,
+      visible,
     };
   },
 };
