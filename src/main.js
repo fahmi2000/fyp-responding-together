@@ -22,6 +22,8 @@ import Fieldset from 'primevue/fieldset';
 import Divider from 'primevue/divider';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
+import Calendar from 'primevue/calendar';
+
 
 
 let app;
@@ -47,6 +49,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Fieldset', Fieldset);
         app.component('Divider', Divider);
         app.component('Toast', Toast);
+        app.component('Calendar', Calendar);
 
         app.mount('#app');
     }

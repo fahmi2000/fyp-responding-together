@@ -56,7 +56,7 @@
   <div class="card flex justify-content-center">
     <Toast />
   </div>
-  <div class="error" v-if="error">{{ error }}</div>
+  <!-- <div class="error" v-if="error">{{ error }}</div> -->
 </template>
 
 <script>
