@@ -20,6 +20,9 @@ import Row from 'primevue/row';
 import Dialog from 'primevue/dialog';
 import Fieldset from 'primevue/fieldset';
 import Divider from 'primevue/divider';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
+
 
 let app;
 
@@ -29,6 +32,7 @@ projectAuth.onAuthStateChanged(() => {
 
         app.use(router);
         app.use(PrimeVue);
+        app.use(ToastService);
         app.component('FloatLabel', FloatLabel);
         app.component('InputText', InputText);
         app.component('Password', Password);
@@ -42,6 +46,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Dialog', Dialog);
         app.component('Fieldset', Fieldset);
         app.component('Divider', Divider);
+        app.component('Toast', Toast);
 
         app.mount('#app');
     }

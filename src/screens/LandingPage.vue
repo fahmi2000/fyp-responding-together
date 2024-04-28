@@ -4,11 +4,16 @@
     <div class="box box2"></div>
     <div class="box box3">
       <div class="auth-container" v-if="showLogin">
+        <div style="text-align: center; padding: 10px">
+          <h2>Responding Together</h2>
+        </div>
         <AuthView @login-success="gotoDashboard" />
-        <p>
-          Don't have an account yet?
-          <span @click="showLogin = false" class="bold">Register</span>
-        </p>
+        <div style="text-align: center">
+          <p>
+            Don't have an account yet?
+            <span @click="showLogin = false" class="bold">Register</span>
+          </p>
+        </div>
       </div>
       <div v-else class="auth-container">
         <CreateAccountView @signup-success="gotoDashboard" />
