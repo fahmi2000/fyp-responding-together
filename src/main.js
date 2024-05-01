@@ -23,8 +23,7 @@ import Divider from 'primevue/divider';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 import Calendar from 'primevue/calendar';
-
-
+import Card from 'primevue/card';
 
 let app;
 
@@ -50,6 +49,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Divider', Divider);
         app.component('Toast', Toast);
         app.component('Calendar', Calendar);
+        app.component('Card', Card);
 
         app.mount('#app');
     }

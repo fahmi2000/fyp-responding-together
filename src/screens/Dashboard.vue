@@ -3,10 +3,10 @@
     <div class="navbar">
       <Navbar />
     </div>
-    <div class="box box2">2</div>
-    <div class="box box3">
+    <div class="box box2">
       <WeatherView />
     </div>
+    <div class="box box3">box 3</div>
     <div class="box box4">4</div>
     <div class="box box5">5</div>
   </div>
@@ -46,8 +46,8 @@ export default {
   grid-template-rows: 0.5fr 2fr 2fr;
   grid-template-areas:
     "navbar navbar navbar navbar"
-    "box2 box3 box3 box5"
-    "box2 box4 box4 box5";
+    "box2 box2 box4 box5"
+    "box3 box3 box4 box5";
   height: 100vh;
   gap: 2vh;
   padding: 2vh;

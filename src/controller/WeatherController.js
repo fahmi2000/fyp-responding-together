@@ -3,7 +3,6 @@ import { WeatherModel } from '@/model/WeatherModel';
 export const WeatherController = {
     fetchWeatherForecast: async () => {
         try {
-            // Pass dynamic values (locationId, startDate, endDate) here
             const result = await WeatherModel.getWeatherForecast(locationId, startDate, endDate);
             if (result.success) {
                 console.log('weathercontroller okay');
