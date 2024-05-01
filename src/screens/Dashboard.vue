@@ -6,7 +6,6 @@
     <div class="box box2">
       <WeatherView />
     </div>
-    <div class="box box3">box 3</div>
     <div class="box box4">4</div>
     <div class="box box5">5</div>
   </div>
@@ -43,11 +42,11 @@ export default {
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 0.5fr 2fr 2fr;
+  grid-template-rows: 0.5fr 3.5fr 0.5fr;
   grid-template-areas:
     "navbar navbar navbar navbar"
     "box2 box2 box4 box5"
-    "box3 box3 box4 box5";
+    "box2 box2 box4 box5";
   height: 100vh;
   gap: 2vh;
   padding: 2vh;
@@ -66,12 +65,9 @@ export default {
 
 .box2 {
   grid-area: box2;
-  background-color: #e1e1e1;
-  overflow: auto;
-}
-
-.box3 {
-  grid-area: box3;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Disable vertical scrolling */
+  white-space: nowrap; /* Prevents the content from wrapping onto the next line */
 }
 
 .box4 {

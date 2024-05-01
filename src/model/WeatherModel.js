@@ -30,6 +30,29 @@ const WeatherModel = {
             console.error('Error fetching weather:', error);
             throw error;
         }
+    },
+
+    async fetchWarnings(startDate, endDate, datasetId, dataCategoryId) {
+        const url = `${API_BASE_URL}?datasetid=${datasetId}&datacategoryid=${dataCategoryId}&start_date=${startDate}&end_date=${endDate}`;
+        console.log('Request URL (Warnings):', url); // Log the request URL to console for warnings
+
+        try {
+            const response = await axios.get(API_BASE_URL, {
+                headers,
+                params: {
+                    datasetid: 'WARNING',
+                    datacategoryid: dataCategoryId,
+                    start_date: startDate,
+                    end_date: endDate
+                }
+            });
+
+            console.log('Raw Warnings Response:', response); // Log the raw response to console for warnings
+            return response.data; // Return the fetched warning data
+        } catch (error) {
+            console.error('Error fetching warnings:', error);
+            throw error;
+        }
     }
 };
 
