@@ -27,8 +27,10 @@ import Card from 'primevue/card';
 import Carousel from 'primevue/carousel';
 import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
-
-
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
 
 let app;
 
@@ -58,6 +60,10 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Carousel', Carousel);
         app.component('Skeleton', Skeleton);
         app.component('Message', Message);
+        app.component('TabView', TabView);
+        app.component('TabPanel', TabPanel);
+        app.component('IconField', IconField);
+        app.component('InputIcon', InputIcon);
 
         app.mount('#app');
     }

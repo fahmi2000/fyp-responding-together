@@ -80,7 +80,7 @@ export default {
         label: "Locations",
         icon: "pi pi-fw pi-money-bill",
         command: () => {
-          navigateTo("Profile");
+          navigateTo("Location");
         },
       },
       {

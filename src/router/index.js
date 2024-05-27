@@ -3,6 +3,7 @@ import LandingPage from '@/screens/LandingPage.vue'; // Assuming this is your la
 import Dashboard from '@/screens/Dashboard.vue';
 import Profile from '@/screens/Profile.vue'; // Import the Profile component
 import Users from '@/screens/Users.vue';
+import Location from '@/screens/Location.vue';
 import { projectAuth } from '@/firebase/config';
 
 // Route guard to check authentication status
@@ -40,6 +41,12 @@ const router = createRouter({
             path: '/users',
             name: 'Users',
             component: Users,
+            beforeEnter: requireAuth
+        },
+        {
+            path: '/location',
+            name: 'Location',
+            component: Location,
             beforeEnter: requireAuth
         },
     ]

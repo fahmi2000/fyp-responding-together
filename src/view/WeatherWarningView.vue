@@ -12,7 +12,7 @@
             @change="fetchWarnings"
             class="w-full md:w-14rem"
           />
-          <label for="category">Select Category:</label>
+          <label for="category">Select Category</label>
         </FloatLabel>
       </div>
 
@@ -25,7 +25,7 @@
             @change="fetchWarnings"
             showButtonBar
           />
-          <label for="dates">Select Dates:</label>
+          <label for="dates">Select Dates</label>
         </FloatLabel>
       </div>
     </div>

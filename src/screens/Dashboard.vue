@@ -4,9 +4,13 @@
       <Navbar />
     </div>
     <div class="box box2">
-      <WeatherView />
+      <TabView>
+        <TabPanel header="Forecast"><WeatherView /> </TabPanel>
+
+        <TabPanel header="Warnings"><WeatherWarningView /> </TabPanel>
+      </TabView>
     </div>
-    <div class="box box4"><WeatherWarningView /></div>
+    <div class="box box4"></div>
   </div>
 </template>
 
