@@ -40,7 +40,7 @@ const WeatherModel = {
             const response = await axios.get(API_BASE_URL, {
                 headers,
                 params: {
-                    datasetid: 'WARNING',
+                    datasetid: datasetId,
                     datacategoryid: dataCategoryId,
                     start_date: startDate,
                     end_date: endDate

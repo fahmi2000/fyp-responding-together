@@ -25,6 +25,9 @@ import ToastService from 'primevue/toastservice';
 import Calendar from 'primevue/calendar';
 import Card from 'primevue/card';
 import Carousel from 'primevue/carousel';
+import Skeleton from 'primevue/skeleton';
+import Message from 'primevue/message';
+
 
 
 let app;
@@ -53,6 +56,9 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Calendar', Calendar);
         app.component('Card', Card);
         app.component('Carousel', Carousel);
+        app.component('Skeleton', Skeleton);
+        app.component('Message', Message);
+
         app.mount('#app');
     }
 });

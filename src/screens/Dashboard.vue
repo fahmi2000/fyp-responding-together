@@ -6,8 +6,7 @@
     <div class="box box2">
       <WeatherView />
     </div>
-    <div class="box box4">4</div>
-    <div class="box box5">5</div>
+    <div class="box box4"><WeatherWarningView /></div>
   </div>
 </template>
 
@@ -15,6 +14,7 @@
 import Navbar from "@/components/Navbar.vue";
 import ManageOfficerView from "@/view/ManageOfficerView.vue";
 import WeatherView from "@/view/WeatherView.vue";
+import WeatherWarningView from "@/view/WeatherWarningView.vue";
 import { getUser } from "@/model/UserModel";
 import { watch } from "vue";
 import { useRouter } from "vue-router";
@@ -24,6 +24,7 @@ export default {
     Navbar,
     ManageOfficerView,
     WeatherView,
+    WeatherWarningView,
   },
   setup() {
     const { user } = getUser();
@@ -45,8 +46,8 @@ export default {
   grid-template-rows: 0.5fr 3.5fr 0.5fr;
   grid-template-areas:
     "navbar navbar navbar navbar"
-    "box2 box2 box4 box5"
-    "box2 box2 box4 box5";
+    "box2 box2 box4 box4"
+    "box2 box2 box4 box4";
   height: 100vh;
   gap: 2vh;
   padding: 2vh;
@@ -72,11 +73,8 @@ export default {
 
 .box4 {
   grid-area: box4;
-  background-color: #c1c1c1;
-}
 
-.box5 {
-  grid-area: box5;
-  background-color: #b1b1b1;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: auto;
 }
 </style>

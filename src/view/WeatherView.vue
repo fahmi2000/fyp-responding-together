@@ -29,7 +29,9 @@
       </div>
     </div>
     <div class="box box2">
-      <div v-if="loading">Loading...</div>
+      <div v-if="loading">
+        <Skeleton width="20rem" height="20rem"></Skeleton>
+      </div>
 
       <div v-else>
         <div class="flex justify-center" style="overflow-x: auto">
@@ -43,23 +45,30 @@
                   v-for="(forecast, index) in groupedForecasts[date]"
                   :key="index"
                 >
-                  <p v-if="forecast.datatype === 'FGM'">
+                  <p v-if="forecast.datatype === 'FGM'" class="forecast-text">
                     MORNING - {{ forecast.value }}
                   </p>
-                  <p v-if="forecast.datatype === 'FGA'">
+                  <p v-if="forecast.datatype === 'FGA'" class="forecast-text">
                     AFTERNOON - {{ forecast.value }}
                   </p>
-                  <p v-if="forecast.datatype === 'FGA'">
+                  <p v-if="forecast.datatype === 'FGA'" class="forecast-text">
                     NIGHT - {{ forecast.value }}
                   </p>
-                  <p v-if="forecast.datatype === 'FMAXT'">
-                    MAX TEMP. - {{ forecast.value }}°C
+                  <p v-if="forecast.datatype === 'FMAXT'" class="forecast-text">
+                    <span class="material-symbols-outlined icon-sm">
+                      thermometer_gain
+                    </span>
+                    {{ forecast.value }}°C
                   </p>
-                  <p v-if="forecast.datatype === 'FMINT'">
-                    MIN TEMP. - {{ forecast.value }}°C
+                  <p v-if="forecast.datatype === 'FMINT'" class="forecast-text">
+                    <span class="material-symbols-outlined icon-sm">
+                      thermometer_minus
+                    </span>
+                    {{ forecast.value }}°C
                   </p>
-                  <p v-if="forecast.datatype === 'FSIGW'">
-                    ALERT - {{ forecast.value }}
+                  <p v-if="forecast.datatype === 'FSIGW'" class="forecast-text">
+                    <span class="pi pi-info-circle icon-sm"></span>
+                    {{ forecast.value }}
                     <span>during {{ forecast.attributes.when }}</span>
                   </p>
 
@@ -223,5 +232,14 @@ function getForecastLabel(datatype) {
 .p-card {
   overflow-wrap: break-word; /* This will break the word at the end of the line */
   word-wrap: break-word; /* For older browsers */
+}
+
+.forecast-text {
+  font-size: 0.9rem; /* Reduce text font size */
+  margin-bottom: 0.5rem; /* Add spacing between forecast items */
+}
+
+.icon-sm {
+  font-size: 1.2rem; /* Adjust icon size */
 }
 </style>
