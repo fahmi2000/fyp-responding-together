@@ -2,16 +2,43 @@
   <div class="location-view">
     <h1>Add Location</h1>
     <form @submit.prevent="addLocation">
-      <label for="name">Name:</label>
-      <input type="text" id="name" v-model="name" required />
-
-      <label for="address">Address:</label>
-      <input type="text" id="address" v-model="address" required />
-
-      <label for="capacity">Capacity:</label>
-      <input type="number" id="capacity" v-model="capacity" required />
-
-      <button type="submit">Add Location</button>
+      <div class="flex justify-content-center gap-2 mb-3">
+        <FloatLabel>
+          <InputText id="locationName" v-model="locationName" />
+          <label for="locationName">Name</label>
+        </FloatLabel>
+      </div>
+      <div class="flex justify-content-center gap-2 mb-3">
+        <FloatLabel>
+          <InputText id="locationAddress" v-model="locationAddress" />
+          <label for="locationAddress">Address</label>
+        </FloatLabel>
+      </div>
+      <div class="flex justify-content-center gap-2 mb-3">
+        <FloatLabel>
+          <InputNumber
+            id="locationCapacity"
+            v-model="locationCapacity"
+            suffix=" person"
+          />
+          <label for="locationCapacity">Capacity</label>
+        </FloatLabel>
+      </div>
+      <div class="flex justify-content-center gap-2 mb-3">
+        <FloatLabel>
+          <InputText id="locationDistrict" v-model="locationDistrict" />
+          <label for="locationDistrict">District</label>
+        </FloatLabel>
+      </div>
+      <div class="flex justify-content-center gap-2 mb-3">
+        <FloatLabel>
+          <InputText id="locationCoordinate" v-model="locationCoordinate" />
+          <label for="locationCoordinate">Coordinate</label>
+        </FloatLabel>
+      </div>
+      <div class="flex justify-content-center gap-2 mb-3">
+        <Button label="Add" severity="contrast" type="submit" />
+      </div>
     </form>
   </div>
 </template>
@@ -22,25 +49,31 @@ import LocationModel from "../model/LocationModel";
 export default {
   data() {
     return {
-      name: "",
-      address: "",
-      capacity: 0,
+      locationName: "",
+      locationAddress: "",
+      locationCapacity: null,
+      locationDistrict: "",
+      locationCoordinate: "",
     };
   },
   methods: {
     async addLocation() {
       const newLocation = {
-        name: this.name,
-        address: this.address,
-        capacity: this.capacity,
+        locationName: this.locationName,
+        locationAddress: this.locationAddress,
+        locationCapacity: this.locationCapacity,
+        locationDistrict: this.locationDistrict,
+        locationCoordinate: this.locationCoordinate,
       };
 
       try {
         await LocationModel.addLocation(newLocation);
         alert("Location added successfully");
-        this.name = "";
-        this.address = "";
-        this.capacity = 0;
+        this.locationName = "";
+        this.locationAddress = "";
+        this.locationCapacity = null;
+        this.locationDistrict = "";
+        this.locationCoordinate = "";
       } catch (error) {
         console.error("Error adding location: ", error);
       }

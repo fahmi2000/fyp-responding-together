@@ -1,6 +1,5 @@
 <template>
   <div class="location-list-view">
-    <h1>Locations</h1>
     <DataTable
       v-model:filters="filters"
       :value="locations"
@@ -9,7 +8,12 @@
       dataKey="id"
       filterDisplay="row"
       :loading="loading"
-      :globalFilterFields="['name', 'address', 'coordinate', 'district']"
+      :globalFilterFields="[
+        'locationName',
+        'locationAddress',
+        'coordinate',
+        'district',
+      ]"
     >
       <template #empty>No locations available</template>
       <!-- Custom header slot -->
@@ -26,28 +30,29 @@
           </IconField>
         </div>
       </template>
-      <Column field="name" header="Name" style="min-width: 12rem">
-        <template #body="{ data }">
-          <strong>{{ data.name }}</strong
-          ><br />
-          {{ data.address }}<br />
-          Capacity: {{ data.capacity }}
-        </template>
-      </Column>
-      <Column field="address" header="Address" />
-      <Column field="capacity" header="Capacity" />
-      <Column field="coordinate" header="Coordinate" />
-      <Column field="district" header="District" />
+      <Column field="locationName" header="Name" style="min-width: 12rem" />
+      <Column field="locationAddress" header="Address" />
+      <Column field="locationCapacity" header="Capacity" />
+      <Column field="locationCoordinate" header="Coordinate" />
+      <Column field="locationDistrict" header="District" />
       <!-- Edit Column -->
-      <Column header="Edit" style="width: 6rem">
+      <Column header="" style="width: 6rem">
         <template #body="{ data }">
-          <button @click="editLocation(data)">Edit</button>
+          <Button
+            label="Edit"
+            severity="contrast"
+            @click="editLocation(data)"
+          />
         </template>
       </Column>
       <!-- Delete Column -->
-      <Column header="Delete" style="width: 6rem">
+      <Column header="" style="width: 6rem">
         <template #body="{ data }">
-          <button @click="deleteLocation(data.id)">Delete</button>
+          <Button
+            label="Delete"
+            severity="danger"
+            @click="deleteLocation(data.id)"
+          />
         </template>
       </Column>
     </DataTable>
@@ -60,7 +65,7 @@
         <input
           type="text"
           id="edit-name"
-          v-model="editingLocation.name"
+          v-model="editingLocation.locationName"
           required
         />
 
@@ -68,7 +73,7 @@
         <input
           type="text"
           id="edit-address"
-          v-model="editingLocation.address"
+          v-model="editingLocation.locationAddress"
           required
         />
 
@@ -76,7 +81,21 @@
         <input
           type="number"
           id="edit-capacity"
-          v-model="editingLocation.capacity"
+          v-model="editingLocation.locationCapacity"
+          required
+        />
+        <label for="edit-coordinate">Coordinate:</label>
+        <input
+          type="text"
+          id="edit-corrdinate"
+          v-model="editingLocation.locationCoordinate"
+          required
+        />
+        <label for="edit-district">District:</label>
+        <input
+          type="text"
+          id="edit-district"
+          v-model="editingLocation.locationDistrict"
           required
         />
 
@@ -97,8 +116,8 @@ import LocationModel from "../model/LocationModel";
 const locations = ref([]);
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  address: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  locationName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  locationAddress: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 const loading = ref(true);
 const editingLocation = ref(null);

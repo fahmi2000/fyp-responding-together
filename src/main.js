@@ -31,6 +31,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
+import InputNumber from 'primevue/inputnumber';
 
 let app;
 
@@ -64,6 +65,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('TabPanel', TabPanel);
         app.component('IconField', IconField);
         app.component('InputIcon', InputIcon);
+        app.component('InputNumber', InputNumber);
 
         app.mount('#app');
     }
