@@ -4,6 +4,7 @@ import Dashboard from '@/screens/Dashboard.vue';
 import Profile from '@/screens/Profile.vue'; // Import the Profile component
 import Users from '@/screens/Users.vue';
 import Location from '@/screens/Location.vue';
+import Disaster from '@/screens/Disaster.vue';
 import { projectAuth } from '@/firebase/config';
 
 // Route guard to check authentication status
@@ -47,6 +48,12 @@ const router = createRouter({
             path: '/location',
             name: 'Location',
             component: Location,
+            beforeEnter: requireAuth
+        },
+        {
+            path: '/disaster',
+            name: 'Disaster',
+            component: Disaster,
             beforeEnter: requireAuth
         },
     ]

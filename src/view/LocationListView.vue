@@ -30,7 +30,19 @@
           </IconField>
         </div>
       </template>
-      <Column field="locationName" header="Name" style="min-width: 12rem" />
+      <Column field="locationName" header="Name" style="min-width: 12rem">
+        <template #body="{ data }">
+          <a
+            :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              data.locationName
+            )}`"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ data.locationName }}
+          </a>
+        </template>
+      </Column>
       <Column field="locationAddress" header="Address" />
       <Column field="locationCapacity" header="Capacity" />
       <Column field="locationCoordinate" header="Coordinate" />
@@ -41,7 +53,7 @@
           <Button
             label="Edit"
             severity="contrast"
-            @click="editLocation(data)"
+            @click="handleEditShow(data)"
           />
         </template>
       </Column>
@@ -58,53 +70,59 @@
     </DataTable>
 
     <!-- Edit Location form -->
-    <div v-if="editingLocation">
-      <h2>Edit Location</h2>
-      <form @submit.prevent="updateLocation">
-        <label for="edit-name">Name:</label>
-        <input
-          type="text"
-          id="edit-name"
-          v-model="editingLocation.locationName"
-          required
-        />
+    <Dialog
+      v-model:visible="visible"
+      modal
+      header="Edit Profile"
+      :style="{ width: '25rem' }"
+      ><form @submit.prevent="updateLocation">
+        <div class="flex justify-content-center gap-2 mb-3">
+          <FloatLabel>
+            <InputText
+              id="locationName"
+              v-model="editingLocation.locationName"
+            />
+            <label for="locationName">Name</label>
+          </FloatLabel>
+        </div>
 
-        <label for="edit-address">Address:</label>
-        <input
-          type="text"
-          id="edit-address"
-          v-model="editingLocation.locationAddress"
-          required
-        />
+        <div class="flex justify-content-center gap-2 mb-3">
+          <FloatLabel>
+            <InputText
+              id="locationAddress"
+              v-model="editingLocation.locationAddress"
+            />
+            <label for="locationAddress">Address</label>
+          </FloatLabel>
+        </div>
 
-        <label for="edit-capacity">Capacity:</label>
-        <input
-          type="number"
-          id="edit-capacity"
-          v-model="editingLocation.locationCapacity"
-          required
-        />
-        <label for="edit-coordinate">Coordinate:</label>
-        <input
-          type="text"
-          id="edit-corrdinate"
-          v-model="editingLocation.locationCoordinate"
-          required
-        />
-        <label for="edit-district">District:</label>
-        <input
-          type="text"
-          id="edit-district"
-          v-model="editingLocation.locationDistrict"
-          required
-        />
+        <div class="flex justify-content-center gap-2 mb-3">
+          <FloatLabel>
+            <InputNumber
+              id="locationCapacity"
+              v-model="editingLocation.locationCapacity"
+              suffix=" person"
+            />
+            <label for="locationCapacity">Capacity</label>
+          </FloatLabel>
+        </div>
+
+        <div class="flex justify-content-center gap-2 mb-3">
+          <FloatLabel>
+            <InputText
+              id="locationDistrict"
+              v-model="editingLocation.locationDistrict"
+            />
+            <label for="locationDistrict">District</label>
+          </FloatLabel>
+        </div>
 
         <!-- Add fields for Coordinate and District editing here -->
 
-        <button type="submit">Update Location</button>
-        <button @click="cancelEdit">Cancel</button>
-      </form>
-    </div>
+        <div class="flex justify-content-center gap-2 mb-3">
+          <Button label="Update" severity="contrast" type="submit" />
+        </div></form
+    ></Dialog>
   </div>
 </template>
 
@@ -141,6 +159,11 @@ const deleteLocation = async (id) => {
   }
 };
 
+const handleEditShow = (data) => {
+  editLocation(data);
+  visible.value = true;
+};
+
 const editLocation = (location) => {
   editingLocation.value = { ...location };
 };
@@ -161,6 +184,8 @@ const updateLocation = async () => {
 const cancelEdit = () => {
   editingLocation.value = null;
 };
+
+const visible = ref(false);
 </script>
 
 

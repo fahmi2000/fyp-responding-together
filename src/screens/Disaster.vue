@@ -1,36 +1,24 @@
+<!-- Disaster.vue -->
+
 <template>
   <div class="grid">
     <div class="box1"><Navbar /></div>
     <div class="box2"></div>
     <div class="box3">
-      <h1>Evacuation Centre List</h1>
-      <Button label="Add" @click="visible = true" severity="contrast" />
-      <Dialog
-        v-model:visible="visible"
-        modal
-        header="Add Location"
-        :style="{ width: '25rem' }"
-      >
-        <LocationAddView />
-      </Dialog>
-      <LocationListView />
+      <h1>Disaster Information</h1>
+      <ManageDisasterView />
     </div>
     <div class="box4"></div>
   </div>
 </template>
-    
-<script setup>
+  
+  <script setup>
 import Navbar from "@/components/Navbar.vue";
-import LocationAddView from "@/view/LocationAddView.vue";
-import LocationListView from "@/view/LocationListView.vue";
-
-import { ref } from "vue";
-
-const visible = ref(false);
+import ManageDisasterView from "@/view/ManageDisasterView.vue";
+// Import any additional components or functions needed for Disaster.vue
 </script>
-
-
-<style scoped>
+  
+  <style scoped>
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -60,3 +48,4 @@ const visible = ref(false);
   grid-area: box3;
 }
 </style>
+  

@@ -87,7 +87,7 @@ export default {
         label: "Disasters",
         icon: "pi pi-fw pi-exclamation-circle",
         command: () => {
-          navigateTo("Profile");
+          navigateTo("Disaster");
         },
       },
     ];

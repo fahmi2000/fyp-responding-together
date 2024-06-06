@@ -122,6 +122,20 @@ async function insertWarningsToFirestore(data) {
                     if (attributes && attributes.title && attributes.title.en) {
                         title = attributes.title.en;
                     }
+
+                    // Insert the document into Firestore without condition for QUAKETSUNAMI datatype
+                    const formattedDate = formatDate(date);
+                    const documentData = {
+                        datatype,
+                        textwarning,
+                        date: formattedDate,
+                        validfrom,
+                        validto,
+                        title
+                    };
+                    await addDoc(collection(projectFirestore, 'weatherwarning'), documentData);
+                    console.log('Data inserted into Firestore:', documentData);
+                    continue; // Skip the condition check for QUAKETSUNAMI datatype
                 }
 
                 // Format the date
@@ -137,18 +151,22 @@ async function insertWarningsToFirestore(data) {
                     title
                 };
 
-                // Log the document data
-                console.log('Document Data:', documentData);
-
-                // Insert the document into Firestore
-                await addDoc(collection(projectFirestore, 'weatherwarning'), documentData);
-                console.log('Data inserted into Firestore:', documentData);
+                // Check if textwarning contains "Johor" before inserting the document into Firestore
+                if (textwarning.includes("Johor")) {
+                    // Insert the document into Firestore
+                    await addDoc(collection(projectFirestore, 'weatherwarning'), documentData);
+                    console.log('Data inserted into Firestore:', documentData);
+                } else {
+                    console.log('Skipped inserting data into Firestore because textwarning does not contain "Johor":', documentData);
+                }
             }
         }
     } catch (error) {
         console.error('Error inserting data into Firestore:', error);
     }
 }
+
+
 
 // Function to format date string
 function formatDate(dateString) {

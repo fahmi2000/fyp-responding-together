@@ -1,7 +1,19 @@
 <template>
   <div class="location-view">
-    <h1>Add Location</h1>
     <form @submit.prevent="addLocation">
+      <!-- Add file input field for CSV -->
+      <div class="flex justify-content-center gap-2 mb-3">
+        <FileUpload
+          mode="basic"
+          accept=".csv"
+          @upload="handleFileUpload"
+          chooseLabel="Choose CSV file"
+        />
+      </div>
+      <Divider align="center" type="solid">
+        <b>or</b>
+      </Divider>
+      <!-- Your existing form fields -->
       <div class="flex justify-content-center gap-2 mb-3">
         <FloatLabel>
           <InputText id="locationName" v-model="locationName" />
@@ -36,13 +48,14 @@
           <label for="locationCoordinate">Coordinate</label>
         </FloatLabel>
       </div>
+      <Divider />
       <div class="flex justify-content-center gap-2 mb-3">
         <Button label="Add" severity="contrast" type="submit" />
       </div>
     </form>
   </div>
 </template>
-  
+
 <script>
 import LocationModel from "../model/LocationModel";
 
@@ -54,10 +67,26 @@ export default {
       locationCapacity: null,
       locationDistrict: "",
       locationCoordinate: "",
+      csvData: [], // Array to store CSV data
     };
   },
   methods: {
     async addLocation() {
+      // Add logic to handle CSV data if present
+      if (this.csvData.length > 0) {
+        try {
+          // Iterate through CSV data and add each location
+          for (const location of this.csvData) {
+            await LocationModel.addLocation(location);
+          }
+          alert("Locations added successfully from CSV");
+          this.csvData = []; // Clear CSV data array
+        } catch (error) {
+          console.error("Error adding locations from CSV: ", error);
+        }
+      }
+
+      // Add your existing addLocation logic for manual input here
       const newLocation = {
         locationName: this.locationName,
         locationAddress: this.locationAddress,
@@ -78,14 +107,43 @@ export default {
         console.error("Error adding location: ", error);
       }
     },
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const csv = e.target.result;
+        this.csvData = this.parseCSV(csv);
+      };
+
+      reader.readAsText(file);
+    },
+    parseCSV(csv) {
+      // Parse CSV and convert to array of objects
+      const lines = csv.split("\n");
+      const headers = lines[0].split(",");
+      const data = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(",");
+        if (values.length === headers.length) {
+          const obj = {};
+          for (let j = 0; j < headers.length; j++) {
+            obj[headers[j].trim()] = values[j].trim();
+          }
+          data.push(obj);
+        }
+      }
+
+      return data;
+    },
   },
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .location-view {
   max-width: 600px;
   margin: 0 auto;
 }
 </style>
-  

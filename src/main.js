@@ -32,6 +32,7 @@ import TabPanel from 'primevue/tabpanel';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import InputNumber from 'primevue/inputnumber';
+import FileUpload from 'primevue/fileupload';
 
 let app;
 
@@ -66,6 +67,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('IconField', IconField);
         app.component('InputIcon', InputIcon);
         app.component('InputNumber', InputNumber);
+        app.component('FileUpload', FileUpload);
 
         app.mount('#app');
     }
