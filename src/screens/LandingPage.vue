@@ -7,7 +7,7 @@
         <div style="text-align: center; padding: 10px">
           <h2>Responding Together</h2>
         </div>
-        <AuthView @login-success="gotoDashboard" />
+        <AuthView @login-success="handleLoginSuccess" />
         <div style="text-align: center">
           <p>
             Don't have an account yet?
@@ -16,7 +16,7 @@
         </div>
       </div>
       <div v-else class="auth-container">
-        <CreateAccountView @signup-success="gotoDashboard" />
+        <CreateAccountView @signup-success="handleSignupSuccess" />
         <p>
           Have an account?
           <span @click="showLogin = true" class="bold">Login</span>
@@ -28,27 +28,25 @@
   </div>
 </template>
 
-<script>
-import CreateAccountView from "@/view/CreateAccountView.vue";
-import AuthView from "@/view/AuthView.vue";
+<script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import CreateAccountView from "@/view/CreateAccountView.vue";
+import AuthView from "@/view/AuthView.vue";
 
-export default {
-  components: {
-    CreateAccountView,
-    AuthView,
-  },
-  setup() {
-    const showLogin = ref(true);
-    const router = useRouter();
+const showLogin = ref(true);
+const router = useRouter();
 
-    const gotoDashboard = () => {
-      router.push({ name: "Dashboard" });
-    };
+const handleLoginSuccess = () => {
+  gotoDashboard();
+};
 
-    return { showLogin, gotoDashboard };
-  },
+const handleSignupSuccess = () => {
+  gotoDashboard();
+};
+
+const gotoDashboard = () => {
+  router.push({ name: "Dashboard" });
 };
 </script>
 

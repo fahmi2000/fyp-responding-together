@@ -106,8 +106,7 @@ const cities = ref([
 const selectedCity = ref(); // Reactive reference to store selected city
 const selectedDates = ref([]); // Reactive reference to store selected dates (range)
 
-const dateFormat = "yy-mm-dd"; // Date format for API request
-
+const dateFormat = "yy-mm-dd";
 const fetchData = async () => {
   loading.value = true;
   try {
@@ -115,8 +114,8 @@ const fetchData = async () => {
       const { locationId } = selectedCity.value;
       const formattedStartDate = formatDate(selectedDates.value[0]); // First selected date as start date
       const formattedEndDate = formatDate(selectedDates.value[1]); // Second selected date as end date
-      const datasetId = "FORECAST"; // Specify the dataset ID
-      const dataCategoryId = "GENERAL"; // Specify the data category ID
+      const datasetId = "FORECAST";
+      const dataCategoryId = "GENERAL";
 
       const weatherData = await WeatherModel.fetchWeather(
         locationId,
@@ -137,12 +136,10 @@ const fetchData = async () => {
   }
 };
 
-// Watch for changes in selectedCity and selectedDates and fetch data accordingly
 watchEffect(() => {
   fetchData();
 });
 
-// Computed property to group forecasts by date
 const groupedForecasts = computed(() => {
   const grouped = {};
   forecasts.value.forEach((forecast) => {

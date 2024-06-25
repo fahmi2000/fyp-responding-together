@@ -3,7 +3,6 @@ import {
     updateProfile,
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
-    onAuthStateChanged,
     EmailAuthProvider,
     reauthenticateWithCredential,
     updatePassword as firebaseUpdatePassword,

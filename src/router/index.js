@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LandingPage from '@/screens/LandingPage.vue'; // Assuming this is your landing page
+import LandingPage from '@/screens/LandingPage.vue';
 import Dashboard from '@/screens/Dashboard.vue';
-import Profile from '@/screens/Profile.vue'; // Import the Profile component
+import Profile from '@/screens/Profile.vue';
 import Users from '@/screens/Users.vue';
 import Location from '@/screens/Location.vue';
 import Disaster from '@/screens/Disaster.vue';
@@ -30,7 +30,7 @@ const router = createRouter({
             path: '/dashboard',
             name: 'Dashboard',
             component: Dashboard,
-            beforeEnter: requireAuth // Protect the Dashboard route
+            beforeEnter: requireAuth // Protect route
         },
         {
             path: '/profile',

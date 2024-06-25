@@ -1,5 +1,3 @@
-// src/models/LocationModel.js
-
 import { projectFirestore, timestamp } from '../firebase/config';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
