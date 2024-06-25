@@ -3,9 +3,9 @@
     <template #start>
       <div class="brand">
         <div class="brand-content">
-          <strong class="brand-text" style="padding-right: 2rem"
-            >RESPONDING TOGETHER</strong
-          >
+          <strong class="brand-text" style="padding-right: 2rem">
+            RESPONDING TOGETHER
+          </strong>
         </div>
       </div>
     </template>
@@ -38,75 +38,68 @@
   </Menubar>
 </template>
 
-<script>
-import { useAuthController } from "@/controller/AuthController";
+<script setup>
+import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { getUser } from "@/model/UserModel";
+import { getUser, signOut } from "@/model/UserModel";
 import Menubar from "primevue/menubar";
 
-export default {
-  components: {
-    Menubar,
+const user = getUser().user;
+const router = useRouter();
+const route = useRoute();
+const error = ref("");
+
+const items = [
+  {
+    label: "Home",
+    icon: "pi pi-fw pi-home",
+    command: () => {
+      navigateTo("Dashboard");
+    },
   },
-  setup() {
-    const { requestSignOut, error } = useAuthController();
-    const { user } = getUser();
-    const router = useRouter();
-    const route = useRoute();
-
-    const items = [
-      {
-        label: "Home",
-        icon: "pi pi-fw pi-home",
-        command: () => {
-          navigateTo("Dashboard");
-        },
-      },
-      {
-        label: "Tasks",
-        icon: "pi pi-fw pi-list-check",
-        command: () => {
-          navigateTo("Profile");
-        },
-      },
-      {
-        label: "Users",
-        icon: "pi pi-fw pi-address-book",
-        command: () => {
-          navigateTo("Users");
-        },
-      },
-      {
-        label: "Locations",
-        icon: "pi pi-fw pi-money-bill",
-        command: () => {
-          navigateTo("Location");
-        },
-      },
-      {
-        label: "Disasters",
-        icon: "pi pi-fw pi-exclamation-circle",
-        command: () => {
-          navigateTo("Disaster");
-        },
-      },
-    ];
-
-    const navigateTo = (name) => {
-      router.push({ name });
-    };
-
-    const handleLogoutClick = async () => {
-      await requestSignOut();
-      if (!error.value) {
-        console.log("User logged out");
-        navigateTo("LandingPage");
-      }
-    };
-
-    // Return all the necessary methods and reactive properties
-    return { handleLogoutClick, user, navigateTo, items };
+  {
+    label: "Tasks",
+    icon: "pi pi-fw pi-list-check",
+    command: () => {
+      navigateTo("Profile");
+    },
   },
+  {
+    label: "Users",
+    icon: "pi pi-fw pi-address-book",
+    command: () => {
+      navigateTo("Users");
+    },
+  },
+  {
+    label: "Locations",
+    icon: "pi pi-fw pi-money-bill",
+    command: () => {
+      navigateTo("Location");
+    },
+  },
+  {
+    label: "Disasters",
+    icon: "pi pi-fw pi-exclamation-circle",
+    command: () => {
+      navigateTo("Disaster");
+    },
+  },
+];
+
+const navigateTo = (name) => {
+  router.push({ name });
+};
+
+const handleLogoutClick = async () => {
+  try {
+    await signOut();
+    console.log("User logged out");
+    navigateTo("LandingPage");
+  } catch (err) {
+    console.error(`Logout error: ${err.message}`);
+    error.value = err.message;
+  }
 };
 </script>
 

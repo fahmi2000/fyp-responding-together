@@ -7,7 +7,7 @@
         <div style="text-align: center; padding: 10px">
           <h2>Responding Together</h2>
         </div>
-        <AuthView @login-success="handleLoginSuccess" />
+        <AuthViewModel @login-success="handleLoginSuccess" />
         <div style="text-align: center">
           <p>
             Don't have an account yet?
@@ -16,7 +16,7 @@
         </div>
       </div>
       <div v-else class="auth-container">
-        <CreateAccountView @signup-success="handleSignupSuccess" />
+        <CreateAccountViewModel @signup-success="handleSignupSuccess" />
         <p>
           Have an account?
           <span @click="showLogin = true" class="bold">Login</span>
@@ -31,8 +31,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import CreateAccountView from "@/view/CreateAccountView.vue";
-import AuthView from "@/view/AuthView.vue";
+import CreateAccountViewModel from "@/view/CreateAccountViewModel.vue";
+import AuthViewModel from "@/view/AuthViewModel.vue";
 
 const showLogin = ref(true);
 const router = useRouter();

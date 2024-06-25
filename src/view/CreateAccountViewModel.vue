@@ -14,15 +14,21 @@
     </form>
   </div>
 </template>
-  
-  <script setup>
-import { ref } from "vue";
-import { createAccount, updateUserProfile } from "../model/UserModel";
+
+<script setup>
+import { ref, defineEmits } from "vue";
+import {
+  createAccount,
+  addDisplayName,
+  addUserToFirestore,
+} from "../model/UserModel";
 
 const error = ref(null);
 const userName = ref("");
 const email = ref("");
 const password = ref("");
+
+const emits = defineEmits(["signup-success"]); // Define the custom event
 
 const handleSubmit = async () => {
   error.value = null;
@@ -33,20 +39,21 @@ const handleSubmit = async () => {
       throw new Error("Could not complete the signup!");
     }
     if (userName.value) {
-      await updateUserProfile(res.user, userName.value);
+      await addDisplayName(res.user, userName.value);
     }
+    await addUserToFirestore(res.user);
+
     console.log(
       `Signup successful. User ID: ${res.user.uid}, Display Name: ${res.user.displayName}`
     );
-    emit("signup-success");
+    emits("signup-success"); // Emit the custom event
   } catch (err) {
     console.error(err.message);
     error.value = err.message;
   }
 };
 </script>
-  
-  <style>
+
+<style>
 /* Add your styles here */
 </style>
-  

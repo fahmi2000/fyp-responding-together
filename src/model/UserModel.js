@@ -8,7 +8,8 @@ import {
     updatePassword as firebaseUpdatePassword,
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
-import { projectAuth } from '@/firebase/config';
+import { projectAuth, projectFirestore } from '../firebase/config';
+import { doc, setDoc } from 'firebase/firestore';
 import { ref } from 'vue';
 
 const user = ref()
@@ -26,7 +27,28 @@ export const createAccount = async (email, password) => {
     return createUserWithEmailAndPassword(projectAuth, email, password);
 };
 
-export const updateUserProfile = async (user, displayName) => {
+export const addUserToFirestore = async (user) => {
+    try {
+        const { email } = user; // Destructure email from the user object
+
+        // Specify the Firestore document reference
+        const userRef = doc(projectFirestore, 'users', user.uid);
+
+        // Set the document data, including email
+        await setDoc(userRef, {
+            email,
+            userType: 'Volunteer'  // Set the user type
+            // Add any other fields as needed
+        });
+
+        console.log('User added to Firestore successfully');
+    } catch (error) {
+        console.error('Error adding user to Firestore:', error.message);
+        throw error;
+    }
+};
+
+export const addDisplayName = async (user, displayName) => {
     return updateProfile(user, { displayName });
 };
 
