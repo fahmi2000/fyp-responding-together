@@ -15,7 +15,7 @@ import { ref } from 'vue';
 const user = ref()
 
 projectAuth.onAuthStateChanged(_user => {
-    console.log('user state change, current user is: ', _user)
+    console.log('From onAuthStateChanged, current user is:', _user)
     user.value = _user
 })
 
@@ -27,23 +27,22 @@ export const createAccount = async (email, password) => {
     return createUserWithEmailAndPassword(projectAuth, email, password);
 };
 
-export const addUserToFirestore = async (user) => {
+export const addUserToFirestore = async (user, email, userFullName, userType) => {
     try {
-        const { email } = user; // Destructure email from the user object
-
-        // Specify the Firestore document reference
         const userRef = doc(projectFirestore, 'users', user.uid);
-
-        // Set the document data, including email
         await setDoc(userRef, {
-            email,
-            userType: 'Volunteer'  // Set the user type
-            // Add any other fields as needed
+            userEmail: email,
+            userFullName: userFullName || "",  // Use userFullName directly
+            userType: userType,
+            userContactNumber: "",
+            userArea: "",
+            userSkill: [],
+            userBio: "",
+            createdAt: new Date().toISOString()
         });
-
-        console.log('User added to Firestore successfully');
+        console.log('User added to Firestore');
     } catch (error) {
-        console.error('Error adding user to Firestore:', error.message);
+        console.error('Error adding user to Firestore:', error);
         throw error;
     }
 };

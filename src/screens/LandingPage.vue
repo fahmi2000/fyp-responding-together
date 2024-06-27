@@ -4,22 +4,30 @@
     <div class="box box2"></div>
     <div class="box box3">
       <div class="auth-container" v-if="showLogin">
-        <div style="text-align: center; padding: 10px">
-          <h2>Responding Together</h2>
+        <div style="text-align: center; padding-bottom: 50px;">
+          <h2 class="brand-title">
+            Responding<br />Together
+          </h2>
         </div>
+
         <AuthViewModel @login-success="handleLoginSuccess" />
         <div style="text-align: center">
           <p>
             Don't have an account yet?
-            <span @click="showLogin = false" class="bold">Register</span>
+            <a @click.prevent="showLogin = false" href="#" class="bold">Register</a>
           </p>
         </div>
       </div>
       <div v-else class="auth-container">
+        <div style="text-align: center; padding-bottom: 20px;">
+          <h2 class="brand-title">
+            Create an Account
+          </h2>
+        </div>
         <CreateAccountViewModel @signup-success="handleSignupSuccess" />
-        <p>
+        <p style="text-align: center">
           Have an account?
-          <span @click="showLogin = true" class="bold">Login</span>
+          <a @click.prevent="showLogin = true" href="#" class="bold">Sign In</a>
         </p>
       </div>
     </div>
@@ -51,6 +59,7 @@ const gotoDashboard = () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 .grid {
   display: grid;
   grid-template-columns: 2fr 1fr 2fr;
@@ -96,4 +105,13 @@ const gotoDashboard = () => {
 .box5 {
   grid-area: box5;
 }
+
+.brand-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; /* You can adjust the weight as needed */
+  margin: 0;
+  padding: 0;
+  line-height: 1.2; /* Adjust line-height if needed */
+}
+
 </style>

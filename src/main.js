@@ -5,7 +5,7 @@ import { projectAuth } from './firebase/config';
 
 import 'primeicons/primeicons.css'
 import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/md-light-deeppurple/theme.css';
+import 'primevue/resources/themes/aura-light-noir/theme.css';
 import 'primeflex/primeflex.css';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';

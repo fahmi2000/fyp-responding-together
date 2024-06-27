@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitSignInForm" class="auth-form">
-    <div class="flex justify-content-center gap-2 mb-3">
+    <div class="flex justify-content-center gap-2 mb-5">
       <FloatLabel>
         <InputText id="email" v-model="email" required />
         <label for="email">Email</label>
