@@ -1,23 +1,19 @@
 <template>
   <div class="grid">
     <div class="box1"><Navbar /></div>
-    <div class="box2"><ProfileView /></div>
+    <div class="box2"><ProfileViewModel /></div>
     <div class="box3">Task History</div>
     <div class="box4">Skills</div>
   </div>
 </template>
-  
-<script>
-import Navbar from "@/components/Navbar.vue";
-import ProfileView from "@/view/ProfileView.vue";
 
-export default {
-  components: {
-    Navbar,
-    ProfileView,
-  },
-};
+<script setup>
+import Navbar from "@/components/Navbar.vue";
+import ProfileViewModel from "@/view/ProfileViewModel.vue";
+
+// Register components
 </script>
+
 <style scoped>
 .grid {
   display: grid;

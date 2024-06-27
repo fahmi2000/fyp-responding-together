@@ -33,6 +33,8 @@ import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import InputNumber from 'primevue/inputnumber';
 import FileUpload from 'primevue/fileupload';
+import Avatar from 'primevue/avatar';
+import Textarea from 'primevue/textarea';
 
 let app;
 
@@ -68,6 +70,8 @@ projectAuth.onAuthStateChanged(() => {
         app.component('InputIcon', InputIcon);
         app.component('InputNumber', InputNumber);
         app.component('FileUpload', FileUpload);
+        app.component('Avatar', Avatar);
+        app.component('Textarea', Textarea);
 
         app.mount('#app');
     }

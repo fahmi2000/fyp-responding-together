@@ -8,8 +8,9 @@ import {
     updatePassword as firebaseUpdatePassword,
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
-import { projectAuth, projectFirestore } from '../firebase/config';
-import { doc, setDoc } from 'firebase/firestore';
+import { projectAuth, projectFirestore, projectStorage } from '../firebase/config';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ref } from 'vue';
 
 const user = ref()
@@ -43,6 +44,50 @@ export const addUserToFirestore = async (user, email, userFullName, userType) =>
         console.log('User added to Firestore');
     } catch (error) {
         console.error('Error adding user to Firestore:', error);
+        throw error;
+    }
+};
+
+export const getUserFromFirestore = async () => {
+    try {
+        const currentUser = projectAuth.currentUser;
+        if (!currentUser) {
+            throw new Error('No user logged in');
+        }
+
+        const userRef = doc(projectFirestore, 'users', currentUser.uid);
+        const userDoc = await getDoc(userRef);
+
+        if (userDoc.exists()) {
+            return userDoc.data();
+        } else {
+            throw new Error('User document not found in Firestore');
+        }
+    } catch (error) {
+        console.error('Error fetching user from Firestore:', error);
+        throw error;
+    }
+};
+
+export const uploadProfilePictureToFirebase = async (file, uid) => {
+    const storageReference = storageRef(projectStorage, `profilePictures/${uid}`);
+    await uploadBytes(storageReference, file);
+    const downloadURL = await getDownloadURL(storageReference);
+    return downloadURL;
+};
+
+export const updateProfilePictureURLInFirestore = async (uid, url) => {
+    const userRef = doc(projectFirestore, 'users', uid);
+    await updateDoc(userRef, { profilePicture: url });
+};
+
+export const updateUserProfileInFirestore = async (uid, updatedData) => {
+    try {
+        const userRef = doc(projectFirestore, 'users', uid);
+        await updateDoc(userRef, updatedData);
+        console.log('User profile updated in Firestore');
+    } catch (error) {
+        console.error('Error updating user profile in Firestore:', error);
         throw error;
     }
 };

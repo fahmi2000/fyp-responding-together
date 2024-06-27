@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '@/screens/LandingPage.vue';
 import Dashboard from '@/screens/Dashboard.vue';
-import Profile from '@/screens/Profile.vue';
+import Profile from '@/screens/ProfileView.vue';
 import Users from '@/screens/Users.vue';
 import Location from '@/screens/Location.vue';
 import Disaster from '@/screens/Disaster.vue';
