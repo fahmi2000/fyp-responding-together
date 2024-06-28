@@ -112,24 +112,18 @@ export const signOut = async () => {
     }
 };
 
-export const reauthenticate = async (user, currentPassword) => {
-    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+export const updatePasswordWithReauth = async (user, currentPassword, newPassword) => {
     try {
+        // Reauthenticate user with their current credentials (old password)
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
         await reauthenticateWithCredential(user, credential);
-        return { success: true };
-    } catch (error) {
-        console.error(`Reauthentication error: ${error.message}`);
-        return { success: false, error: error.message };
-    }
-};
 
-export const updatePassword = async (user, newPassword) => {
-    try {
+        // Once reauthentication is successful, update the password
         await firebaseUpdatePassword(user, newPassword);
         console.log('Password update successful');
         return { success: true };
     } catch (error) {
-        console.error(`Password update error: ${error.message}`);
+        console.error(`Error updating password: ${error.message}`);
         return { success: false, error: error.message };
     }
 };

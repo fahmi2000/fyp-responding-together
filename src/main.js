@@ -35,6 +35,8 @@ import InputNumber from 'primevue/inputnumber';
 import FileUpload from 'primevue/fileupload';
 import Avatar from 'primevue/avatar';
 import Textarea from 'primevue/textarea';
+import SpeedDial from 'primevue/speeddial';
+
 
 let app;
 
@@ -72,6 +74,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('FileUpload', FileUpload);
         app.component('Avatar', Avatar);
         app.component('Textarea', Textarea);
+        app.component('SpeedDial', SpeedDial);
 
         app.mount('#app');
     }
