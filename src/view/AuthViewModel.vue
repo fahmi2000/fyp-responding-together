@@ -8,7 +8,7 @@
     </div>
     <div class="flex justify-content-center gap-2 mb-3">
       <FloatLabel>
-        <Password v-model="password" inputId="password" :feedback="false" />
+        <Password v-model="password" inputId="password" :feedback="false"/>
         <label for="password">Password</label>
       </FloatLabel>
     </div>

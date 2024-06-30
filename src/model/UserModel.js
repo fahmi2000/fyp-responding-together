@@ -9,7 +9,7 @@ import {
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
 import { projectAuth, projectFirestore, projectStorage } from '../firebase/config';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ref } from 'vue';
 
@@ -48,6 +48,26 @@ export const addUserToFirestore = async (user, email, userFullName, userType) =>
     }
 };
 
+export const createUserDocument = async (uid, userData) => {
+    try {
+        const userRef = doc(projectFirestore, 'users', uid);
+        await setDoc(userRef, {
+            uid,
+            userEmail: userData.email,
+            userFullName: userData.userFullName || "",
+            userType: userData.userType,
+            userContactNumber: userData.userContactNumber || "",
+            userBio: userData.userBio || "",
+            profilePicture: userData.profilePicture || "",
+            createdAt: new Date().toISOString()
+        });
+        console.log(`User document created with UID: ${uid}`);
+    } catch (error) {
+        console.error('Error creating user document:', error);
+        throw error;
+    }
+};
+
 export const getUserFromFirestore = async () => {
     try {
         const currentUser = projectAuth.currentUser;
@@ -65,6 +85,20 @@ export const getUserFromFirestore = async () => {
         }
     } catch (error) {
         console.error('Error fetching user from Firestore:', error);
+        throw error;
+    }
+};
+
+export const getAllUsersFromFirestore = async () => {
+    try {
+        const querySnapshot = await getDocs(collection(projectFirestore, 'users'));
+        const users = [];
+        querySnapshot.forEach((doc) => {
+            users.push({ id: doc.id, ...doc.data() });
+        });
+        return users;
+    } catch (error) {
+        console.error('Error fetching users from Firestore:', error);
         throw error;
     }
 };
@@ -144,29 +178,23 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const functions = getFunctions();
 
-const addUserWithRoleFunction = httpsCallable(functions, 'addUserWithRole');
-const listUsersFunction = httpsCallable(functions, 'listUsers');
-const listOfficersFunction = httpsCallable(functions, 'listOfficers');
+const addUserFunction = httpsCallable(functions, 'addUser');
 const deleteUserFunction = httpsCallable(functions, 'deleteUser');
+const listUsersFunction = httpsCallable(functions, 'listUsers');
 
 export const UserModel = {
-    addUserWithRole: async (userData) => {
-        const result = await addUserWithRoleFunction(userData);
+    addUser: async (userData) => {
+        const result = await addUserFunction(userData);
         return result;
-    },
-
-    listUsers: async () => {
-        const result = await listUsersFunction();
-        return result.data.users;  // Return just the users array
-    },
-
-    listOfficers: async () => {
-        const result = await listOfficersFunction();
-        return result.data.users; // Return just the users array
     },
 
     deleteUser: async (uid) => {
         const result = await deleteUserFunction({ uid });
         return result.data;
+    },
+
+    listUsers: async () => {
+        const result = await listUsersFunction();
+        return result.data.users;  // Return just the users array
     },
 };

@@ -4,19 +4,19 @@
       <Navbar />
     </div>
     <div class="box box1">
-      <ManageOfficerView />
+      <ManageOfficerViewModel />
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import ManageOfficerView from "@/view/ManageOfficerView.vue";
+import ManageOfficerViewModel from "@/view/ManageOfficerViewModel.vue";
 
 export default {
   components: {
     Navbar,
-    ManageOfficerView,
+    ManageOfficerViewModel,
   },
 };
 </script>

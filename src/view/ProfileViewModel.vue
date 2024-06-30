@@ -41,12 +41,6 @@
       </div>
       <div class="flex align-items-center gap-3 mb-5">
         <FloatLabel>
-          <InputText id="userEmail" v-model="editUserData.userEmail" />
-          <label for="userEmail">Email</label>
-        </FloatLabel>
-      </div>
-      <div class="flex align-items-center gap-3 mb-5">
-        <FloatLabel>
           <InputText id="userArea" v-model="editUserData.userArea" />
           <label for="userArea">Area</label>
         </FloatLabel>
