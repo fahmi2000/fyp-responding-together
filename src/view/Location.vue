@@ -1,16 +1,13 @@
 <template>
   <div class="grid">
-    <div class="box1"><Navbar /></div>
+    <div class="box1">
+      <Navbar />
+    </div>
     <div class="box2"></div>
     <div class="box3">
       <h1>Evacuation Centre List</h1>
       <Button label="Add" @click="visible = true" severity="contrast" />
-      <Dialog
-        v-model:visible="visible"
-        modal
-        header="Add Location"
-        :style="{ width: '25rem' }"
-      >
+      <Dialog v-model:visible="visible" modal header="Add Location" :style="{ width: '25rem' }">
         <LocationAddView />
       </Dialog>
       <LocationListView />
@@ -18,11 +15,11 @@
     <div class="box4"></div>
   </div>
 </template>
-    
+
 <script setup>
 import Navbar from "@/components/Navbar.vue";
-import LocationAddView from "@/view/LocationAddView.vue";
-import LocationListView from "@/view/LocationListView.vue";
+import LocationAddView from "@/viewmodel/LocationAddView.vue";
+import LocationListView from "@/viewmodel/LocationListView.vue";
 
 import { ref } from "vue";
 

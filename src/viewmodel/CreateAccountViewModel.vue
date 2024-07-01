@@ -27,10 +27,10 @@
       </div>
       <div class="error">{{ error }}</div>
       <div class="flex justify-content-center gap-2 mb-3">
-      <Button type="submit" severity="contrast">
-        Register <span class="pi pi-angle-right"></span>
-      </Button>
-    </div>
+        <Button type="submit" severity="contrast">
+          Register <span class="pi pi-angle-right"></span>
+        </Button>
+      </div>
     </form>
   </div>
 </template>
@@ -52,7 +52,7 @@ const userFullName = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
-const emits = defineEmits(["signup-success"]); // Define the custom event
+const emits = defineEmits(["signup-success"]); // Define the event
 
 const handleSubmit = async () => {
   error.value = null;
@@ -70,18 +70,10 @@ const handleSubmit = async () => {
     await addUserToFirestore(res.user, email.value, userFullName.value, "Volunteer");
 
     console.log(`Signup successful. User ID: ${res.user.uid}`);
-    emits("signup-success"); // Emit the custom event
+    emits("signup-success"); // Emit the event
   } catch (err) {
     console.error(err.message);
     error.value = err.message;
   }
 };
 </script>
-
-
-
-
-
-<style>
-/* Add your styles here */
-</style>

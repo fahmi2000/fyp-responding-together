@@ -1,122 +1,60 @@
-<!-- /src/view/ProfileView.vue -->
 <template>
-  <div v-if="user">
-    <div class="center-icon">
-      <i class="pi pi-user" style="font-size: 15rem"></i>
+  <div class="grid">
+    <div class="box1">
+      <Navbar />
     </div>
-    <Divider />
-    <div class="card flex justify-content-end">
-      <Button @click="visible = true" label="Edit" severity="contrast" />
-      <Dialog
-        v-model:visible="visible"
-        modal
-        header="Edit Profile"
-        :style="{ width: '25rem' }"
-      >
-        <span class="p-text-secondary block mb-5"
-          >Update your information.</span
-        >
-        <form @submit.prevent="changeEmail(newEmail)">
-          <div class="flex align-items-center gap-3 mb-3">
-            <label for="email" class="font-semibold w-6rem">New Email</label>
-            <InputText
-              id="email"
-              class="flex-auto"
-              autocomplete="off"
-              v-model="newEmail"
-            />
-          </div>
-
-          <div class="flex justify-content-end gap-2">
-            <Button
-              type="submit"
-              label="Update Email"
-              severity="contrast"
-            ></Button>
-          </div>
-        </form>
-        <Divider />
-        <form @submit.prevent="changePassword(currentPassword, newPassword)">
-          <div class="flex align-items-center gap-3 mb-5">
-            <label for="email" class="font-semibold w-6rem">Old Password</label>
-            <Password
-              id="email"
-              class="flex-auto"
-              autocomplete="off"
-              :feedback="false"
-              v-model="currentPassword"
-            />
-          </div>
-          <div class="flex align-items-center gap-3 mb-5">
-            <label for="email" class="font-semibold w-6rem">New Password</label>
-            <Password
-              id="email"
-              class="flex-auto"
-              autocomplete="off"
-              v-model="newPassword"
-            />
-          </div>
-          <div class="flex justify-content-end gap-2">
-            <Button
-              type="submit"
-              label="Update Password"
-              severity="contrast"
-            ></Button>
-          </div>
-          <p v-if="error" class="error">{{ error }}</p>
-        </form>
-      </Dialog>
+    <div class="box2">
+      <ProfileViewModel />
     </div>
-    <strong>Name</strong>
-    <p>{{ user.displayName }}</p>
-
-    <strong>Email</strong>
-    <p>{{ user.email }}</p>
-
-    <strong>ID</strong>
-    <p>{{ user.uid }}</p>
-
-    <strong>Location</strong>
-    <p>{ user.location }</p>
-  </div>
-
-  <div v-else>
-    <p>Please log in.</p>
+    <div class="box3">Task History</div>
+    <div class="box4">Skills</div>
   </div>
 </template>
 
-  
-<script>
-import { ref } from "vue";
-import { useProfileController } from "@/controller/ProfileController";
+<script setup>
+import Navbar from "@/components/Navbar.vue";
+import ProfileViewModel from "@/viewmodel/ProfileViewModel.vue";
 
-export default {
-  setup() {
-    const { user, changePassword, error, changeEmail } = useProfileController();
-    const currentPassword = ref("");
-    const newPassword = ref("");
-    const newEmail = ref("");
-    const visible = ref(false);
-
-    return {
-      user,
-      currentPassword,
-      newPassword,
-      changePassword,
-      error,
-      newEmail,
-      changeEmail,
-      visible,
-    };
-  },
-};
+// Register components
 </script>
 
 <style scoped>
-.center-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: flex;
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 0.5fr 2fr 2fr;
+  grid-template-areas:
+    "box1 box1 box1 box1"
+    "box2 box3 box3 box3"
+    "box2 box4 box4 box4";
+  height: 100vh;
+  gap: 2vh;
+  padding: 2vh;
+  padding: 2vw;
+}
+
+.box {
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+}
+
+.box1 {
+  grid-area: box1;
+}
+
+.box2 {
+  grid-area: box2;
+  overflow: auto;
+}
+
+.box3 {
+  background-color: #e1e1e1;
+  grid-area: box3;
+}
+
+.box4 {
+  grid-area: box4;
+  background-color: #c1c1c1;
 }
 </style>

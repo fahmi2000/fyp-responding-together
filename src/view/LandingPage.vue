@@ -39,8 +39,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import CreateAccountViewModel from "@/view/CreateAccountViewModel.vue";
-import AuthViewModel from "@/view/AuthViewModel.vue";
+import CreateAccountViewModel from "@/viewmodel/CreateAccountViewModel.vue";
+import AuthViewModel from "@/viewmodel/AuthViewModel.vue";
 
 const showLogin = ref(true);
 const router = useRouter();
@@ -60,6 +60,7 @@ const gotoDashboard = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 .grid {
   display: grid;
   grid-template-columns: 2fr 1fr 2fr;
@@ -108,10 +109,11 @@ const gotoDashboard = () => {
 
 .brand-title {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700; /* You can adjust the weight as needed */
+  font-weight: 700;
+  /* You can adjust the weight as needed */
   margin: 0;
   padding: 0;
-  line-height: 1.2; /* Adjust line-height if needed */
+  line-height: 1.2;
+  /* Adjust line-height if needed */
 }
-
 </style>

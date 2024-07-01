@@ -44,8 +44,6 @@
     <div>
 
       <h1>Users List</h1>
-
-      <h1>Users List</h1>
       <DataTable :value="users">
         <Column field="id" header="UID"></Column> <!-- Display the UID -->
         <Column field="userFullName" header="Full Name"></Column>
@@ -53,6 +51,7 @@
         <Column field="userType" header="User Type"></Column>
         <Column field="userContactNumber" header="Contact Number"></Column>
         <Column field="userBio" header="Bio"></Column>
+        <Column field="emailVerified" header="Email Verified"></Column> <!-- Display email verification status -->
       </DataTable>
     </div>
   </div>
@@ -60,61 +59,28 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { UserModel, createUserDocument, getAllUsersFromFirestore } from '@/model/UserModel'; // Import UserModel and createUserDocument
-
-const visible = ref(false);
-const email = ref('');
-const password = ref('');
-const userFullName = ref('');
-const userContactNumber = ref('');
-const userBio = ref('');
-const userType = ref('Officer'); // Set userType directly to 'Officer'
-
-const addOfficer = async () => {
-  try {
-    // Create user in Firebase Authentication
-    const result = await UserModel.addUser({ email: email.value, password: password.value });
-
-    // Log the Firebase Authentication User data
-    console.log('Firebase Authentication User:', result.data);
-
-    // Extract UID from the response
-    const uid = result.data.uid;
-    if (uid) {
-      console.log('UID of newly created user:', uid);
-
-      // Create a document in the 'users' collection using the uid and additional user data
-      await createUserDocument(uid, {
-        email: email.value,
-        userFullName: userFullName.value,
-        userType: userType.value,
-        userContactNumber: userContactNumber.value,
-        userBio: userBio.value
-      });
-    }
-
-    // Clear form fields
-    email.value = '';
-    password.value = '';
-    userFullName.value = '';
-    userContactNumber.value = '';
-    userBio.value = '';
-
-    alert('Officer added successfully');
-
-    // Close the dialog
-    visible.value = false;
-  } catch (error) {
-    console.error('Error adding officer:', error);
-    alert(`Failed to add officer: ${error.message}`);
-  }
-};
+import { getAllUsersFromFirestore, UserModel } from '@/model/UserModel'; // Import functions
 
 const users = ref([]);
 
 const loadUsers = async () => {
   try {
-    users.value = await getAllUsersFromFirestore();
+    // Fetch users from Firestore
+    const firestoreUsers = await getAllUsersFromFirestore();
+
+    // Fetch users from Firebase Authentication
+    const authUsers = await UserModel.listUsers();
+
+    // Merge Firestore data with Authentication data
+    const mergedUsers = firestoreUsers.map(firestoreUser => {
+      const authUser = authUsers.find(authUser => authUser.uid === firestoreUser.id);
+      return {
+        ...firestoreUser,
+        emailVerified: authUser ? authUser.emailVerified : false // default to false if not found
+      };
+    });
+
+    users.value = mergedUsers;
   } catch (error) {
     console.error('Error loading users:', error);
     alert('Failed to load users.');

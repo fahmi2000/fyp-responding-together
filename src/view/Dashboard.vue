@@ -5,9 +5,13 @@
     </div>
     <div class="box box2">
       <TabView>
-        <TabPanel header="Forecast"><WeatherView /> </TabPanel>
+        <TabPanel header="Forecast">
+          <WeatherView />
+        </TabPanel>
 
-        <TabPanel header="Warnings"><WeatherWarningView /> </TabPanel>
+        <TabPanel header="Warnings">
+          <WeatherWarningView />
+        </TabPanel>
       </TabView>
     </div>
     <div class="box box4"></div>
@@ -17,8 +21,8 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import ManageOfficerView from "@/view/ManageOfficerView.vue";
-import WeatherView from "@/view/WeatherView.vue";
-import WeatherWarningView from "@/view/WeatherWarningView.vue";
+import WeatherView from "@/viewmodel/WeatherView.vue";
+import WeatherWarningView from "@/viewmodel/WeatherWarningView.vue";
 import { getUser } from "@/model/UserModel";
 import { watch } from "vue";
 import { useRouter } from "vue-router";
@@ -70,15 +74,19 @@ export default {
 
 .box2 {
   grid-area: box2;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  overflow-y: hidden; /* Disable vertical scrolling */
-  white-space: nowrap; /* Prevents the content from wrapping onto the next line */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  overflow-y: hidden;
+  /* Disable vertical scrolling */
+  white-space: nowrap;
+  /* Prevents the content from wrapping onto the next line */
 }
 
 .box4 {
   grid-area: box4;
 
-  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
   overflow-y: auto;
 }
 </style>

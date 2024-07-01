@@ -2,7 +2,9 @@
 
 <template>
   <div class="grid">
-    <div class="box1"><Navbar /></div>
+    <div class="box1">
+      <Navbar />
+    </div>
     <div class="box2"></div>
     <div class="box3">
       <h1>Disaster Information</h1>
@@ -11,14 +13,14 @@
     <div class="box4"></div>
   </div>
 </template>
-  
-  <script setup>
+
+<script setup>
 import Navbar from "@/components/Navbar.vue";
-import ManageDisasterView from "@/view/ManageDisasterView.vue";
+import ManageDisasterView from "@/viewmodel/ManageDisasterView.vue";
 // Import any additional components or functions needed for Disaster.vue
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -48,4 +50,3 @@ import ManageDisasterView from "@/view/ManageDisasterView.vue";
   grid-area: box3;
 }
 </style>
-  

@@ -4,25 +4,14 @@
       <h1>Weather Forecast</h1>
       <div class="card flex justify-content-center">
         <FloatLabel class="w-full md:w-14rem">
-          <Dropdown
-            v-model="selectedCity"
-            :options="cities"
-            optionLabel="name"
-            class="w-full md:w-14rem"
-            filter
-          />
+          <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" class="w-full md:w-14rem" filter />
           <label for="city">Select a City</label>
         </FloatLabel>
       </div>
       <div class="flex justify-content-center mt-4">
         <div>
           <FloatLabel>
-            <Calendar
-              v-model="selectedDates"
-              selectionMode="range"
-              :dateFormat="dateFormat"
-              showButtonBar
-            />
+            <Calendar v-model="selectedDates" selectionMode="range" :dateFormat="dateFormat" showButtonBar />
             <label for="selectedDates">Select Dates</label>
           </FloatLabel>
         </div>
@@ -41,10 +30,7 @@
                 {{ formatDateTitle(date) }}
               </template>
               <template #content>
-                <div
-                  v-for="(forecast, index) in groupedForecasts[date]"
-                  :key="index"
-                >
+                <div v-for="(forecast, index) in groupedForecasts[date]" :key="index">
                   <p v-if="forecast.datatype === 'FGM'" class="forecast-text">
                     MORNING - {{ forecast.value }}
                   </p>
@@ -112,8 +98,8 @@ const fetchData = async () => {
   try {
     if (selectedCity.value && selectedDates.value.length === 2) {
       const { locationId } = selectedCity.value;
-      const formattedStartDate = formatDate(selectedDates.value[0]); // First selected date as start date
-      const formattedEndDate = formatDate(selectedDates.value[1]); // Second selected date as end date
+      const formattedStartDate = formatDate(selectedDates.value[0]);
+      const formattedEndDate = formatDate(selectedDates.value[1]);
       const datasetId = "FORECAST";
       const dataCategoryId = "GENERAL";
 
@@ -206,8 +192,10 @@ function getForecastLabel(datatype) {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Creates two columns */
-  gap: 1rem; /* Adds a gap between the grid items */
+  grid-template-columns: 1fr 1fr;
+  /* Creates two columns */
+  gap: 1rem;
+  /* Adds a gap between the grid items */
   grid-template-areas:
     "box1 box1"
     "box2 box2";
@@ -223,20 +211,28 @@ function getForecastLabel(datatype) {
 
 .forecast-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Creates two columns */
-  gap: 1rem; /* Adds a gap between the grid items */
+  grid-template-columns: repeat(2, 1fr);
+  /* Creates two columns */
+  gap: 1rem;
+  /* Adds a gap between the grid items */
 }
+
 .p-card {
-  overflow-wrap: break-word; /* This will break the word at the end of the line */
-  word-wrap: break-word; /* For older browsers */
+  overflow-wrap: break-word;
+  /* This will break the word at the end of the line */
+  word-wrap: break-word;
+  /* For older browsers */
 }
 
 .forecast-text {
-  font-size: 0.9rem; /* Reduce text font size */
-  margin-bottom: 0.5rem; /* Add spacing between forecast items */
+  font-size: 0.9rem;
+  /* Reduce text font size */
+  margin-bottom: 0.5rem;
+  /* Add spacing between forecast items */
 }
 
 .icon-sm {
-  font-size: 1.2rem; /* Adjust icon size */
+  font-size: 1.2rem;
+  /* Adjust icon size */
 }
 </style>

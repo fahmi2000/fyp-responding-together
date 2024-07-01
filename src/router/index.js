@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LandingPage from '@/screens/LandingPage.vue';
-import Dashboard from '@/screens/Dashboard.vue';
-import Profile from '@/screens/ProfileView.vue';
-import Users from '@/screens/ManageOfficerView.vue';
-import Location from '@/screens/Location.vue';
-import Disaster from '@/screens/Disaster.vue';
+import LandingPage from '@/view/LandingPage.vue';
+import Dashboard from '@/view/Dashboard.vue';
+import Profile from '@/view/ProfileView.vue';
+import Users from '@/view/ManageOfficerView.vue';
+import Location from '@/view/Location.vue';
+import Disaster from '@/view/Disaster.vue';
 import { projectAuth } from '@/firebase/config';
 
 // Route guard to check authentication status

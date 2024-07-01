@@ -33,7 +33,7 @@ export const addUserToFirestore = async (user, email, userFullName, userType) =>
         const userRef = doc(projectFirestore, 'users', user.uid);
         await setDoc(userRef, {
             userEmail: email,
-            userFullName: userFullName || "",  // Use userFullName directly
+            userFullName: userFullName || "",
             userType: userType,
             userContactNumber: "",
             userArea: "",
