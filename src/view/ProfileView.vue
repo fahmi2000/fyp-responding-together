@@ -7,13 +7,16 @@
       <ProfileViewModel />
     </div>
     <div class="box3">Task History</div>
-    <div class="box4">Skills</div>
+    <div class="box4">
+      <ProfileSkillViewModel />
+    </div>
   </div>
 </template>
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import ProfileViewModel from "@/viewmodel/ProfileViewModel.vue";
+import ProfileSkillViewModel from "@/viewmodel/ProfileSkillViewModel.vue";
 
 // Register components
 </script>

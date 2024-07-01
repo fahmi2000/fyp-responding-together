@@ -9,7 +9,7 @@ import {
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
 import { projectAuth, projectFirestore, projectStorage } from '../firebase/config';
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, query } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ref } from 'vue';
 
@@ -122,6 +122,39 @@ export const updateUserProfileInFirestore = async (uid, updatedData) => {
         console.log('User profile updated in Firestore');
     } catch (error) {
         console.error('Error updating user profile in Firestore:', error);
+        throw error;
+    }
+};
+
+export const addUserSkillToFirestore = async (userId, skillData) => {
+    try {
+        const userSkillsRef = collection(projectFirestore, 'users', userId, 'userSkills');
+        await addDoc(userSkillsRef, skillData);
+        console.log('User skill added to Firestore');
+    } catch (error) {
+        console.error('Error adding user skill to Firestore:', error);
+        throw error;
+    }
+};
+
+export const getUserSkillFromFirestore = async (userId) => {
+    try {
+        const userSkillCollectionRef = collection(projectFirestore, 'users', userId, 'userSkills');
+        const userSkillQuery = query(userSkillCollectionRef);
+        const userSkillSnapshot = await getDocs(userSkillQuery);
+
+        let userSkills = [];
+
+        userSkillSnapshot.forEach((doc) => {
+            userSkills.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        return userSkills;
+    } catch (error) {
+        console.error('Error fetching user skills from Firestore:', error);
         throw error;
     }
 };
