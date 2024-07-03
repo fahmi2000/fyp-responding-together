@@ -1,19 +1,27 @@
 <template>
   <div class="location-view">
-    <form @submit.prevent="addLocation">
-      <!-- Add file input field for CSV -->
+    <!-- CSV Upload Form -->
+    <form @submit.prevent="uploadCSV">
       <div class="flex justify-content-center gap-2 mb-3">
-        <FileUpload
-          mode="basic"
-          accept=".csv"
-          @upload="handleFileUpload"
-          chooseLabel="Choose CSV file"
-        />
+        <Button label="Upload .csv" icon="pi pi-image" @click="triggerFileInput" />
+        <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload" style="display: none;" />
       </div>
-      <Divider align="center" type="solid">
-        <b>or</b>
-      </Divider>
-      <!-- Your existing form fields -->
+      <div class="flex justify-content-center gap-2 mb-3">
+        <Button label="Submit CSV" severity="contrast" type="submit" />
+      </div>
+      <!-- Progress spinner for loading indicator -->
+      <div v-if="loading" class="flex justify-content-center gap-2 mb-3">
+        <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+          animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+      </div>
+    </form>
+
+    <Divider align="center" type="solid">
+      <b>or</b>
+    </Divider>
+
+    <!-- Manual Input Form -->
+    <form @submit.prevent="addLocation">
       <div class="flex justify-content-center gap-2 mb-3">
         <FloatLabel>
           <InputText id="locationName" v-model="locationName" />
@@ -28,11 +36,7 @@
       </div>
       <div class="flex justify-content-center gap-2 mb-3">
         <FloatLabel>
-          <InputNumber
-            id="locationCapacity"
-            v-model="locationCapacity"
-            suffix=" person"
-          />
+          <InputNumber id="locationCapacity" v-model="locationCapacity" suffix=" person" />
           <label for="locationCapacity">Capacity</label>
         </FloatLabel>
       </div>
@@ -48,7 +52,6 @@
           <label for="locationCoordinate">Coordinate</label>
         </FloatLabel>
       </div>
-      <Divider />
       <div class="flex justify-content-center gap-2 mb-3">
         <Button label="Add" severity="contrast" type="submit" />
       </div>
@@ -57,6 +60,7 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import LocationModel from "../model/LocationModel";
 
 export default {
@@ -68,14 +72,14 @@ export default {
       locationDistrict: "",
       locationCoordinate: "",
       csvData: [], // Array to store CSV data
+      loading: false, // Loading state
     };
   },
   methods: {
-    async addLocation() {
-      // Add logic to handle CSV data if present
+    async uploadCSV() {
       if (this.csvData.length > 0) {
+        this.loading = true; // Show spinner
         try {
-          // Iterate through CSV data and add each location
           for (const location of this.csvData) {
             await LocationModel.addLocation(location);
           }
@@ -83,10 +87,14 @@ export default {
           this.csvData = []; // Clear CSV data array
         } catch (error) {
           console.error("Error adding locations from CSV: ", error);
+        } finally {
+          this.loading = false; // Hide spinner
         }
+      } else {
+        alert("No CSV data to upload");
       }
-
-      // Add your existing addLocation logic for manual input here
+    },
+    async addLocation() {
       const newLocation = {
         locationName: this.locationName,
         locationAddress: this.locationAddress,
@@ -107,6 +115,9 @@ export default {
         console.error("Error adding location: ", error);
       }
     },
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
     handleFileUpload(event) {
       const file = event.target.files[0];
       const reader = new FileReader();
@@ -119,7 +130,6 @@ export default {
       reader.readAsText(file);
     },
     parseCSV(csv) {
-      // Parse CSV and convert to array of objects
       const lines = csv.split("\n");
       const headers = lines[0].split(",");
       const data = [];

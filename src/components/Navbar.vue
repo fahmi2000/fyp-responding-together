@@ -24,11 +24,7 @@
             <i class="pi pi-user"></i>
             <span style="padding-left: 10px">Profile</span>
           </a>
-          <a
-            @click="handleLogoutClick"
-            class="dropdown-item"
-            style="padding-left: 10px"
-          >
+          <a @click="handleLogoutClick" class="dropdown-item" style="padding-left: 10px">
             <i class="pi pi-sign-out"></i>
             <span style="padding-left: 10px">Logout</span>
           </a>
@@ -79,10 +75,10 @@ const items = [
     },
   },
   {
-    label: "Disasters",
+    label: "Affected Area(s)",
     icon: "pi pi-fw pi-exclamation-circle",
     command: () => {
-      navigateTo("Disaster");
+      navigateTo("Affected Area");
     },
   },
 ];
@@ -106,6 +102,5 @@ const handleLogoutClick = async () => {
 <style scoped>
 .custom-navbar {
   background-color: #ff6c5c;
-  border-radius: 20px;
 }
 </style>

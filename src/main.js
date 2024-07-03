@@ -36,6 +36,13 @@ import FileUpload from 'primevue/fileupload';
 import Avatar from 'primevue/avatar';
 import Textarea from 'primevue/textarea';
 import SpeedDial from 'primevue/speeddial';
+import ConfirmPopup from 'primevue/confirmpopup';
+import ConfirmationService from 'primevue/confirmationservice';
+import Panel from 'primevue/panel';
+import Ripple from 'primevue/ripple';
+
+import ProgressSpinner from 'primevue/progressspinner';
+
 
 
 let app;
@@ -47,6 +54,8 @@ projectAuth.onAuthStateChanged(() => {
         app.use(router);
         app.use(PrimeVue);
         app.use(ToastService);
+        app.use(ConfirmationService);
+        app.use(PrimeVue, { ripple: true });
         app.component('FloatLabel', FloatLabel);
         app.component('InputText', InputText);
         app.component('Password', Password);
@@ -75,7 +84,10 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Avatar', Avatar);
         app.component('Textarea', Textarea);
         app.component('SpeedDial', SpeedDial);
-
+        app.component('ConfirmPopup', ConfirmPopup);
+        app.component('Panel', Panel);
+        app.component('ProgressSpinner', ProgressSpinner);
+        app.directive('ripple', Ripple);
         app.mount('#app');
     }
 });

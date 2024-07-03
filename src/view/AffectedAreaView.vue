@@ -1,5 +1,3 @@
-<!-- Disaster.vue -->
-
 <template>
   <div class="grid">
     <div class="box1">
@@ -7,8 +5,8 @@
     </div>
     <div class="box2"></div>
     <div class="box3">
-      <h1>Disaster Information</h1>
-      <ManageDisasterView />
+      <h1>Affected Area(s)</h1>
+      <ManageAffectedAreaViewModel />
     </div>
     <div class="box4"></div>
   </div>
@@ -16,8 +14,8 @@
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
-import ManageDisasterView from "@/viewmodel/ManageDisasterView.vue";
-// Import any additional components or functions needed for Disaster.vue
+import ManageAffectedAreaViewModel from "@/viewmodel/ManageAffectedAreaViewModel.vue";
+
 </script>
 
 <style scoped>

@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="card flex justify-content-center">
-      <Button label="Add Officer" @click="visible = true" />
+
       <Dialog v-model:visible="visible" modal header="Add Officer" :style="{ width: '25rem' }">
         <template #header>
-          <div class="inline-flex align-items-center justify-content-center gap-2">
+          <div class="inline-flex align-items-right justify-content-center gap-2">
             <Avatar shape="circle" icon="pi pi-user" />
             <span class="font-bold white-space-nowrap">Add New Officer</span>
           </div>
@@ -43,8 +43,10 @@
 
     <div>
 
-      <h1>Users List</h1>
-      <DataTable :value="users">
+      <h1>Users</h1>
+      <Button label="Add" @click="visible = true" />
+
+      <DataTable :value="users" style="margin-top: 20px;">
         <Column field="id" header="UID"></Column> <!-- Display the UID -->
         <Column field="userFullName" header="Full Name"></Column>
         <Column field="userEmail" header="Email"></Column>

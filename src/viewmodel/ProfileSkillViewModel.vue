@@ -1,17 +1,37 @@
 <template>
     <div class="profile-skills">
-        <h2>User Skills</h2>
+        <div class="flex overflow-hidden">
+            <div class="flex-none flex align-items-center justify-content-center m-2 px-5 py-3">
+                <h3>Skills and Expertise</h3>
+            </div>
+            <div class="flex-none flex align-items-center justify-content-center m-2 px-5 py-3">
+                <Button label="Add Skill" icon="pi pi-plus" @click="dialogVisible = true"
+                    class="p-button-outlined p-button-rounded" />
+            </div>
+        </div>
 
         <div v-if="userSkills.length === 0">
             <p>No skills added yet. Add skills to display here.</p>
         </div>
 
         <div v-else>
-            <p v-for="(skill, index) in userSkills" :key="index">
-                <strong>Skill Name:</strong> {{ skill.skillName }}<br>
-                <strong>Category:</strong> {{ skill.skillCategory }}<br>
-                <strong>Level:</strong> {{ skill.skillLevel }}<br>
-            </p>
+            <Card v-for="(skill, index) in userSkills" :key="index" class="flex mb-5">
+                <template #title>
+                    {{ skill.skillName }}
+                </template>
+                <template #subtitle>
+                    <p><strong>Category:</strong> {{ skill.skillCategory }}</p>
+                    <p><strong>Level:</strong> {{ skill.skillLevel }}</p>
+                    <p v-if="skill.certification">
+                        <strong>Certification:</strong> <a :href="skill.certification.url" target="_blank">{{
+                            skill.certification.name }}</a>
+                    </p>
+                    <div class="flex justify-content-end mt-3">
+                        <Button icon="pi pi-trash" @click="deleteSkill(skill.id)"
+                            class="p-button-rounded p-button-danger" />
+                    </div>
+                </template>
+            </Card>
         </div>
 
         <!-- Dialog for adding a new skill -->
@@ -20,16 +40,22 @@
                 <div class="p-fluid">
                     <div class="p-field">
                         <label for="skillName">Skill Name</label>
-                        <InputText id="skillName" v-model="newSkill.skillName" required autocomplete="off" />
+                        <InputText id="skillName" v-model="currentSkill.skillName" required autocomplete="off" />
                     </div>
                     <div class="p-field">
                         <label for="skillCategory">Category</label>
-                        <InputText id="skillCategory" v-model="newSkill.skillCategory" required autocomplete="off" />
+                        <InputText id="skillCategory" v-model="currentSkill.skillCategory" required
+                            autocomplete="off" />
                     </div>
                     <div class="p-field">
                         <label for="skillLevel">Level</label>
-                        <Dropdown id="skillLevel" v-model="newSkill.skillLevel" :options="skillLevels"
+                        <Dropdown id="skillLevel" v-model="currentSkill.skillLevel" :options="skillLevels"
                             optionLabel="label" optionValue="value" required />
+                    </div>
+                    <div class="p-field">
+                        <label for="certificationFile">Upload Certification (PDF)</label>
+                        <input type="file" id="certificationFile" @change="handleFileUpload" accept="application/pdf"
+                            required />
                     </div>
                 </div>
                 <div class="p-dialog-footer">
@@ -38,26 +64,24 @@
                 </div>
             </form>
         </Dialog>
-
-        <!-- Button to open the dialog -->
-        <Button label="Add Skill" icon="pi pi-plus" @click="dialogVisible = true" />
-
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { getUserSkillFromFirestore, addUserSkillToFirestore } from '@/model/UserModel';
+import { getUserSkillFromFirestore, addUserSkillToFirestore, deleteUserSkillFromFirestore, uploadPDFToStorage } from '@/model/UserModel';
 import { projectAuth } from '@/firebase/config';
 
 const currentUser = projectAuth.currentUser;
 const userSkills = ref([]);
 const dialogVisible = ref(false);
-const newSkill = ref({
+const currentSkill = ref({
     skillName: '',
     skillCategory: '',
-    skillLevel: null // Default value, dropdown will set this
+    skillLevel: null, // Default value, dropdown will set this
+    certification: null
 });
+const certificationFile = ref(null);
 
 const skillLevels = [
     { label: 'Beginner', value: 'Beginner' },
@@ -80,18 +104,29 @@ const fetchUserSkills = async () => {
     }
 };
 
+// Function to handle file upload
+const handleFileUpload = (event) => {
+    certificationFile.value = event.target.files[0];
+};
+
 // Function to add a new skill
 const addSkill = async () => {
     try {
         if (currentUser) {
             const userId = currentUser.uid;
-            await addUserSkillToFirestore(userId, newSkill.value);
+            if (certificationFile.value) {
+                const downloadURL = await uploadPDFToStorage(certificationFile.value, userId, currentSkill.value.skillName);
+                currentSkill.value.certification = { name: certificationFile.value.name, url: downloadURL };
+            }
+            await addUserSkillToFirestore(userId, currentSkill.value);
             // Clear the form after successful addition
-            newSkill.value = {
+            currentSkill.value = {
                 skillName: '',
                 skillCategory: '',
-                skillLevel: null
+                skillLevel: null,
+                certification: null
             };
+            certificationFile.value = null;
             // Close the dialog
             closeDialog();
             // Refresh user skills list
@@ -105,39 +140,35 @@ const addSkill = async () => {
     }
 };
 
+// Function to delete a skill
+const deleteSkill = async (skillId) => {
+    try {
+        if (currentUser) {
+            const userId = currentUser.uid;
+            await deleteUserSkillFromFirestore(userId, skillId);
+            // Refresh user skills list
+            await fetchUserSkills();
+        } else {
+            throw new Error('No user logged in');
+        }
+    } catch (error) {
+        console.error('Failed to delete skill:', error);
+        // Handle error gracefully (e.g., show error message to user)
+    }
+};
+
 // Function to close the dialog
 const closeDialog = () => {
     dialogVisible.value = false;
+    currentSkill.value = {
+        skillName: '',
+        skillCategory: '',
+        skillLevel: null,
+        certification: null
+    };
+    certificationFile.value = null;
 };
 
 // Fetch user skills on component mount
 fetchUserSkills();
 </script>
-
-<style scoped>
-.profile-skills {
-    margin-top: 20px;
-}
-
-.profile-skills p {
-    margin-bottom: 10px;
-}
-
-form {
-    margin-top: 20px;
-}
-
-.p-dialog-footer {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.p-field {
-    margin-bottom: 20px;
-}
-
-.p-button-secondary {
-    margin-right: 10px;
-}
-</style>

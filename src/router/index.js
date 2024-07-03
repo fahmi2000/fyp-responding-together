@@ -3,8 +3,8 @@ import LandingPage from '@/view/LandingPage.vue';
 import Dashboard from '@/view/Dashboard.vue';
 import Profile from '@/view/ProfileView.vue';
 import Users from '@/view/ManageOfficerView.vue';
-import Location from '@/view/Location.vue';
-import Disaster from '@/view/Disaster.vue';
+import Location from '@/view/LocationView.vue';
+import AffectedArea from '@/view/AffectedAreaView.vue';
 import { projectAuth } from '@/firebase/config';
 
 // Route guard to check authentication status
@@ -51,9 +51,9 @@ const router = createRouter({
             beforeEnter: requireAuth
         },
         {
-            path: '/disaster',
-            name: 'Disaster',
-            component: Disaster,
+            path: '/AffectedArea',
+            name: 'Affected Area',
+            component: AffectedArea,
             beforeEnter: requireAuth
         },
     ]

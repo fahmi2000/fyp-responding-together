@@ -9,8 +9,8 @@ import {
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
 import { projectAuth, projectFirestore, projectStorage } from '../firebase/config';
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, query } from 'firebase/firestore';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, query, deleteDoc } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL, getStorage, deleteObject } from 'firebase/storage';
 import { ref } from 'vue';
 
 const user = ref()
@@ -126,6 +126,7 @@ export const updateUserProfileInFirestore = async (uid, updatedData) => {
     }
 };
 
+// user skill
 export const addUserSkillToFirestore = async (userId, skillData) => {
     try {
         const userSkillsRef = collection(projectFirestore, 'users', userId, 'userSkills');
@@ -159,10 +160,44 @@ export const getUserSkillFromFirestore = async (userId) => {
     }
 };
 
-export const addDisplayName = async (user, displayName) => {
-    return updateProfile(user, { displayName });
+export const uploadPDFToStorage = async (file, uid, skillName) => {
+    try {
+        const storage = getStorage();
+        const fileRef = storageRef(storage, `certifications/${uid}/${skillName}.pdf`);
+        await uploadBytes(fileRef, file);
+        const downloadURL = await getDownloadURL(fileRef);
+        return downloadURL;
+    } catch (error) {
+        console.error('Error uploading PDF to Storage:', error);
+        throw error;
+    }
 };
 
+export const editUserSkillInFirestore = async (userId, skillId, updatedSkillData) => {
+    try {
+        const skillRef = doc(projectFirestore, `users/${userId}/userSkill`, skillId);
+        await updateDoc(skillRef, updatedSkillData);
+        console.log('User skill updated in Firestore');
+    } catch (error) {
+        console.error('Error updating user skill in Firestore:', error);
+        throw error;
+    }
+};
+
+export const deleteUserSkillFromFirestore = async (userId, skillId) => {
+    try {
+        const skillRef = doc(projectFirestore, `users/${userId}/userSkills`, skillId);
+        await deleteDoc(skillRef);
+        console.log('Skill deleted successfully');
+    } catch (error) {
+        console.error('Error deleting skill:', error);
+        throw error;
+    }
+};
+
+//////////////////
+
+//auth logic
 export const signIn = async (email, password) => {
     return signInWithEmailAndPassword(projectAuth, email, password);
 };

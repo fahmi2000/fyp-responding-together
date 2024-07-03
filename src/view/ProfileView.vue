@@ -6,9 +6,21 @@
     <div class="box2">
       <ProfileViewModel />
     </div>
-    <div class="box3">Task History</div>
-    <div class="box4">
+    <div class="box3">
       <ProfileSkillViewModel />
+    </div>
+    <div class="box4">
+      <div class="flex overflow-hidden">
+        <div class="flex-none flex align-items-center justify-content-center m-2 px-5 py-3">
+          <h3>Task History</h3>
+        </div>
+        <div class="flex-none flex align-items-center justify-content-center m-2 px-5 py-3">
+          <Button label="Join Task" icon="pi pi-plus" @click="dialogVisible = true"
+            class="p-button-outlined p-button-rounded" />
+        </div>
+      </div>
+      <br>
+      No task(s) found, join a task by clicking the button above.
     </div>
   </div>
 </template>
@@ -28,8 +40,8 @@ import ProfileSkillViewModel from "@/viewmodel/ProfileSkillViewModel.vue";
   grid-template-rows: 0.5fr 2fr 2fr;
   grid-template-areas:
     "box1 box1 box1 box1"
-    "box2 box3 box3 box3"
-    "box2 box4 box4 box4";
+    "box2 box3 box4 box4"
+    "box2 box3 box4 box4";
   height: 100vh;
   gap: 2vh;
   padding: 2vh;
@@ -49,15 +61,16 @@ import ProfileSkillViewModel from "@/viewmodel/ProfileSkillViewModel.vue";
 .box2 {
   grid-area: box2;
   overflow: auto;
+  /* Enable scrolling if content overflows */
 }
 
 .box3 {
-  background-color: #e1e1e1;
   grid-area: box3;
+  overflow: auto;
+  /* Enable scrolling if content overflows */
 }
 
 .box4 {
   grid-area: box4;
-  background-color: #c1c1c1;
 }
 </style>

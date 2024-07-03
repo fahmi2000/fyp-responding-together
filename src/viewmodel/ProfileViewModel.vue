@@ -1,7 +1,8 @@
 <template>
   <div v-if="userData">
     <div class="center-icon">
-      <img v-if="userData.profilePicture" :src="userData.profilePicture" alt="Profile Picture" class="profile-picture" />
+      <img v-if="userData.profilePicture" :src="userData.profilePicture" alt="Profile Picture"
+        class="profile-picture" />
       <i v-else class="pi pi-user" style="font-size: 15rem"></i>
     </div>
     <div class="button-group">
@@ -10,7 +11,8 @@
     <input type="file" ref="fileInput" @change="handleProfilePictureUpload" style="display: none;" />
     <Divider />
     <div class="button-group right-aligned">
-      <SpeedDial :model="speedDialItems" direction="up" :style="{ left: '1rem', bottom: '1rem' }" :tooltipOptions="{ position: 'left' }" />
+      <SpeedDial :model="speedDialItems" direction="up" :style="{ left: '1rem', bottom: '1rem' }"
+        :tooltipOptions="{ position: 'left' }" />
     </div>
     <strong>Name</strong>
     <p>{{ userData.userFullName }}</p>
@@ -85,7 +87,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
-import { getUserFromFirestore, updateUserProfileInFirestore, uploadProfilePictureToFirebase, updateProfilePictureURLInFirestore, updatePasswordWithReauth  } from '@/model/UserModel';
+import { getUserFromFirestore, updateUserProfileInFirestore, uploadProfilePictureToFirebase, updateProfilePictureURLInFirestore, updatePasswordWithReauth } from '@/model/UserModel';
 import { projectAuth } from '../firebase/config';
 
 const userData = ref(null);
@@ -208,7 +210,8 @@ const updateUserAccount = async () => {
 
 .user-name {
   display: inline-block;
-  max-width: 12rem; /* Adjust as needed */
+  max-width: 12rem;
+  /* Adjust as needed */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -2,13 +2,13 @@
   <div class="grid-container">
     <div class="box box1">
       <h1>Weather Forecast</h1>
-      <div class="card flex justify-content-center">
+      <div class="card flex justify-content-left mt-6">
         <FloatLabel class="w-full md:w-14rem">
           <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" class="w-full md:w-14rem" filter />
           <label for="city">Select a City</label>
         </FloatLabel>
       </div>
-      <div class="flex justify-content-center mt-4">
+      <div class="flex justify-content-left mt-6">
         <div>
           <FloatLabel>
             <Calendar v-model="selectedDates" selectionMode="range" :dateFormat="dateFormat" showButtonBar />

@@ -5,7 +5,7 @@
     </div>
     <div class="box2"></div>
     <div class="box3">
-      <h1>Evacuation Centre List</h1>
+      <h1>Evacuation Centre</h1>
       <Button label="Add" @click="visible = true" severity="contrast" />
       <Dialog v-model:visible="visible" modal header="Add Location" :style="{ width: '25rem' }">
         <LocationAddView />
