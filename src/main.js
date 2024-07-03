@@ -40,7 +40,7 @@ import ConfirmPopup from 'primevue/confirmpopup';
 import ConfirmationService from 'primevue/confirmationservice';
 import Panel from 'primevue/panel';
 import Ripple from 'primevue/ripple';
-
+import MultiSelect from 'primevue/multiselect';
 import ProgressSpinner from 'primevue/progressspinner';
 
 
@@ -87,6 +87,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('ConfirmPopup', ConfirmPopup);
         app.component('Panel', Panel);
         app.component('ProgressSpinner', ProgressSpinner);
+        app.component('MultiSelect', MultiSelect);
         app.directive('ripple', Ripple);
         app.mount('#app');
     }

@@ -1,5 +1,5 @@
 import { projectFirestore, projectAuth } from '../firebase/config';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { getUserFromFirestore } from '@/model/UserModel';
 
 const affectedAreasCollection = collection(projectFirestore, 'affectedareas');
@@ -30,13 +30,17 @@ export async function addAffectedArea(newArea) {
 
         const userDoc = await getUserFromFirestore(currentUser.uid);
 
+        // Prepare createdAt timestamp
+        const createdAt = serverTimestamp();
+
         // Add the current user's information to the new area object
         const areaToAdd = {
             ...newArea,
+            createdAt, // Add createdAt timestamp
             reportedBy: {
                 userID: currentUser.uid,
-                displayName: userDoc.userFullName, // Use appropriate field from userDoc
-                email: userDoc.userEmail // Use appropriate field from userDoc
+                displayName: userDoc.userFullName, // Assuming userDoc has this field
+                email: userDoc.userEmail // Assuming userDoc has this field
                 // Add other relevant fields as needed
             }
         };
