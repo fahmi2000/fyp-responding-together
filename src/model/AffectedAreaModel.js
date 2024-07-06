@@ -1,5 +1,5 @@
 import { projectFirestore, projectAuth } from '../firebase/config';
-import { collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getUserFromFirestore } from '@/model/UserModel';
 
 const affectedAreasCollection = collection(projectFirestore, 'affectedareas');

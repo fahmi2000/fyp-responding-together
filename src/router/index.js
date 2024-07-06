@@ -5,6 +5,7 @@ import Profile from '@/view/ProfileView.vue';
 import Users from '@/view/ManageOfficerView.vue';
 import Location from '@/view/LocationView.vue';
 import AffectedArea from '@/view/AffectedAreaView.vue';
+import Task from '@/view/ManageTaskView.vue';
 import { projectAuth } from '@/firebase/config';
 
 // Route guard to check authentication status
@@ -30,7 +31,13 @@ const router = createRouter({
             path: '/dashboard',
             name: 'Dashboard',
             component: Dashboard,
-            beforeEnter: requireAuth // Protect route
+            beforeEnter: requireAuth
+        },
+        {
+            path: '/task',
+            name: 'Task',
+            component: Task,
+            beforeEnter: requireAuth
         },
         {
             path: '/profile',

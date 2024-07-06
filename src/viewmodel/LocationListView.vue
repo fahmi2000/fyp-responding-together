@@ -29,59 +29,51 @@
           </a>
         </template>
       </Column>
-      <Column field="locationAddress" header="Address" />
       <Column field="locationCapacity" header="Capacity" />
-      <Column field="locationCoordinate" header="Coordinate" />
       <Column field="locationDistrict" header="District" />
       <!-- Edit Column -->
-      <Column header="" style="width: 6rem">
+      <Column header="" style="width: 3rem">
         <template #body="{ data }">
-          <Button label="Edit" severity="contrast" @click="handleEditShow(data)" />
+          <Button severity="contrast" @click="handleEditShow(data)" icon="pi pi-pen-to-square" />
         </template>
       </Column>
       <!-- Delete Column -->
-      <Column header="" style="width: 6rem">
+      <Column header="" style="width: 3rem">
         <template #body="{ data }">
-          <Button label="Delete" severity="danger" @click="deleteLocation(data.id)" />
+          <Button severity="danger" @click="deleteLocation(data.id)" icon="pi pi-trash" />
         </template>
       </Column>
     </DataTable>
 
     <!-- Edit Location form -->
-    <Dialog v-model:visible="visible" modal header="Edit Profile" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="visible" modal header="Edit Profile" :style="{ minWidth: '25rem' }">
       <form @submit.prevent="updateLocation">
-        <div class="flex justify-content-center gap-2 mb-3">
+        <div class="flex justify-content-center gap-2 mb-5 mt-4">
           <FloatLabel>
-            <InputText id="locationName" v-model="editingLocation.locationName" />
+            <InputText id="locationName" v-model="editingLocation.locationName" :style="{ width: '25rem' }" />
             <label for="locationName">Name</label>
           </FloatLabel>
         </div>
 
-        <div class="flex justify-content-center gap-2 mb-3">
+        <div class="flex justify-content-center gap-2 mb-5">
           <FloatLabel>
-            <InputText id="locationAddress" v-model="editingLocation.locationAddress" />
-            <label for="locationAddress">Address</label>
-          </FloatLabel>
-        </div>
-
-        <div class="flex justify-content-center gap-2 mb-3">
-          <FloatLabel>
-            <InputNumber id="locationCapacity" v-model="editingLocation.locationCapacity" suffix=" person" />
+            <InputNumber id="locationCapacity" v-model="editingLocation.locationCapacity" suffix=" person"
+              :style="{ width: '25rem' }" />
             <label for="locationCapacity">Capacity</label>
           </FloatLabel>
         </div>
 
-        <div class="flex justify-content-center gap-2 mb-3">
+        <div class="flex justify-content-center gap-2 mb-5">
           <FloatLabel>
-            <InputText id="locationDistrict" v-model="editingLocation.locationDistrict" />
+            <InputText id="locationDistrict" v-model="editingLocation.locationDistrict" :style="{ width: '25rem' }" />
             <label for="locationDistrict">District</label>
           </FloatLabel>
         </div>
 
         <!-- Add fields for Coordinate and District editing here -->
 
-        <div class="flex justify-content-center gap-2 mb-3">
-          <Button label="Update" severity="contrast" type="submit" />
+        <div class="flex justify-content-end gap-2 mb-2">
+          <Button label="Save" severity="contrast" type="submit" icon="pi pi-save" />
         </div>
       </form>
     </Dialog>

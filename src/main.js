@@ -42,8 +42,7 @@ import Panel from 'primevue/panel';
 import Ripple from 'primevue/ripple';
 import MultiSelect from 'primevue/multiselect';
 import ProgressSpinner from 'primevue/progressspinner';
-
-
+import TreeTable from 'primevue/treetable';
 
 let app;
 
@@ -88,6 +87,7 @@ projectAuth.onAuthStateChanged(() => {
         app.component('Panel', Panel);
         app.component('ProgressSpinner', ProgressSpinner);
         app.component('MultiSelect', MultiSelect);
+        app.component('TreeTable', TreeTable);
         app.directive('ripple', Ripple);
         app.mount('#app');
     }

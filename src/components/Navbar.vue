@@ -57,7 +57,7 @@ const items = [
     label: "Tasks",
     icon: "pi pi-fw pi-list-check",
     command: () => {
-      navigateTo("Profile");
+      navigateTo("Task");
     },
   },
   {

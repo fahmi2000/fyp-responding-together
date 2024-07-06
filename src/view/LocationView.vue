@@ -5,8 +5,12 @@
     </div>
     <div class="box2"></div>
     <div class="box3">
-      <h1>Evacuation Centre</h1>
-      <Button label="Add" @click="visible = true" severity="contrast" />
+      <div class="flex align-items-center justify-content-between mb-2 mr-4">
+        <h1 class="mr-auto">Evacuation Centre</h1>
+        <div>
+          <Button icon="pi pi-plus" @click="visible = true" severity="contrast" />
+        </div>
+      </div>
       <Dialog v-model:visible="visible" modal header="Add Location" :style="{ width: '25rem' }">
         <LocationAddView />
       </Dialog>

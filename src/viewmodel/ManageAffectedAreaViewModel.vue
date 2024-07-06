@@ -5,7 +5,7 @@
         <InputText v-model="filters.global.value" placeholder="Search Area..." class="global-filter" />
       </div>
       <div>
-        <Button v-if="userType !== 'Volunteer'" label="Add New Area" icon="pi pi-plus" @click="showDialog = true" />
+        <Button v-if="userType === 'Admin'" label="Add New Area" icon="pi pi-plus" @click="showDialog = true" />
       </div>
     </div>
     <DataTable :value="affectedAreas" :filters="filters"
@@ -34,68 +34,88 @@
           slotProps.data.createdAt.nanoseconds / 1000000).toLocaleString() }}</template>
       </Column>
       <Column field="status" header="Status"></Column>
-      <Column header="Actions" v-if="userType === 'Admin'">
+      <Column header="Actions">
         <template #body="slotProps">
-          <button @click="deleteArea(slotProps.data.id)">Delete</button>
+          <div class="flex justify-content-start gap-2 mb-5">
+            <Button icon="pi pi-pen-to-square" @click="editArea(slotProps.data)" outlined />
+            <Button icon="pi pi-trash" severity="danger" @click="deleteArea(slotProps.data.id)" outlined />
+          </div>
         </template>
       </Column>
     </DataTable>
 
-    <Dialog v-model="showDialog" :visible="showDialog" header="Add New Affected Area" :modal="true" @hide="clearForm()"
+    <Dialog v-model="showDialog" :visible="showDialog" header="Edit Affected Area" :modal="true" @hide="clearForm()"
       :style="{ minWidth: '25rem' }">
-      <form @submit.prevent="addNewArea" class="p-fluid">
-        <div class="flex justify-content-start gap-2 mb-5">
-          <Dropdown :style="{ minWidth: '25rem' }" id="type" v-model="newArea.type" :options="typeOptions"
-            placeholder="Select a Type" optionLabel="label" optionValue="value" />
+      <form @submit.prevent="saveArea">
+        <div class="flex justify-content-start gap-2 mb-5 mt-4">
+          <FloatLabel>
+            <Dropdown :style="{ minWidth: '25rem' }" id="type" v-model="newArea.type" :options="typeOptions"
+              placeholder="Select a Type" optionLabel="label" optionValue="value" />
+            <label for="type">Type</label>
+          </FloatLabel>
         </div>
         <div class="flex justify-content-start gap-2 mb-5">
-          <InputText id="description" v-model="newArea.description" placeholder="Description" required />
+          <FloatLabel>
+            <Textarea id="description" v-model="newArea.description" placeholder="Description" required rows="5"
+              cols="30" :style="{ minWidth: '25rem' }" />
+            <label for="description">Description</label>
+          </FloatLabel>
         </div>
         <div class="flex justify-content-start gap-2 mb-5">
-          <Dropdown :style="{ minWidth: '25rem' }" id="area" v-model="newArea.area" :options="areaOptions"
-            placeholder="Select an Area" optionLabel="label" optionValue="value" />
+          <FloatLabel>
+            <Dropdown :style="{ minWidth: '25rem' }" id="area" v-model="newArea.area" :options="areaOptions"
+              placeholder="Select an Area" optionLabel="label" optionValue="value" />
+            <label for="area">Area</label>
+          </FloatLabel>
         </div>
         <div class="flex justify-content-start gap-2 mb-5">
-          <MultiSelect :style="{ minWidth: '25rem' }" id="locations" v-model="selectedLocations" :options="locations"
-            optionLabel="locationName" optionValue="id" placeholder="Select Locations" display="chip" filter />
+          <FloatLabel>
+            <MultiSelect :style="{ maxWidth: '25rem' }" id="locations" v-model="selectedLocations" :options="locations"
+              optionLabel="locationName" optionValue="id" placeholder="Select Locations" display="chip" filter />
+            <label for="locations">Locations</label>
+          </FloatLabel>
         </div>
         <div class="flex justify-content-start gap-2 mb-5">
-          <Dropdown :style="{ minWidth: '25rem' }" id="status" v-model="newArea.status" :options="statusOptions"
-            placeholder="Select a Status" optionLabel="label" optionValue="value" />
+          <FloatLabel>
+            <Dropdown :style="{ minWidth: '25rem' }" id="status" v-model="newArea.status" :options="statusOptions"
+              placeholder="Select a Status" optionLabel="label" optionValue="value" />
+            <label for="status">Status</label>
+          </FloatLabel>
         </div>
 
-        <div class="flex justify-content-start gap-2 mb-3">
-          <Button type="submit" label="Add" />
-          <Button type="button" label="Cancel" class="p-button-secondary" @click="hideDialog" />
+        <div class="flex justify-content-end gap-2 mb-3">
+          <Button type="button" label="Cancel" icon="pi pi-times-circle" @click="hideDialog" severity="danger"
+            outlined />
+          <Button type="submit" label="Save" icon="pi pi-save" />
         </div>
       </form>
     </Dialog>
-
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAllAffectedAreas, addAffectedArea, deleteAffectedArea } from '@/model/AffectedAreaModel'; // Adjust the path as per your project structure
+import { getAllAffectedAreas, addAffectedArea, deleteAffectedArea, updateAffectedArea } from '@/model/AffectedAreaModel'; // Adjust the path as per your project structure
 import { getUserFromFirestore } from '@/model/UserModel';
 import LocationModel from "@/model/LocationModel"; // Adjust the path as per your project structure
 import { FilterMatchMode } from 'primevue/api';
+import Textarea from 'primevue/textarea';
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const affectedAreas = ref([]);
 const newArea = ref({
+  id: null,
   description: '',
-  area: null, // Initialize area as null
+  area: null,
   type: null,
   status: null,
 });
 const locations = ref([]);
 const selectedLocations = ref([]);
-const showDialog = ref(false); // Reactive variable to control dialog visibility
-const userType = ref(''); // Initialize userType as an empty string
+const showDialog = ref(false);
+const userType = ref('');
 
 // Options for the dropdown
 const areaOptions = ref([
@@ -122,7 +142,7 @@ const typeOptions = ref([
 ]);
 
 const statusOptions = ref([
-  { label: 'Select a Type', value: null },
+  { label: 'Select a Status', value: null },
   { label: 'Active', value: 'Active' },
   { label: 'Resolved', value: 'Resolved' },
   { label: 'Under Assessment', value: 'Under Assessment' },
@@ -135,32 +155,42 @@ onMounted(async () => {
   locations.value = await LocationModel.getLocations();
 
   const user = await getUserFromFirestore();
-  userType.value = user.userType; // Assign userType
+  userType.value = user.userType;
 });
 
-// Function to add a new affected area
-const addNewArea = async () => {
+// Function to handle editing an area
+const editArea = (area) => {
+  newArea.value.id = area.id;
+  newArea.value.type = area.type;
+  newArea.value.description = area.description;
+  newArea.value.area = area.area;
+  selectedLocations.value = area.locationIDs;
+  newArea.value.status = area.status;
+  showDialog.value = true;
+};
+
+// Function to save a new or edited area
+const saveArea = async () => {
   try {
-    // Prepare new area object with selected locations
-    const newAreaData = {
+    const areaData = {
       type: newArea.value.type,
       description: newArea.value.description,
-      reportedBy: null, // This will be automatically populated in addAffectedArea function
-      locationIDs: selectedLocations.value, // Assuming locationIDs is an array of selected location IDs
-      area: newArea.value.area, // Add the selected area
+      reportedBy: null,
+      locationIDs: selectedLocations.value,
+      area: newArea.value.area,
       status: newArea.value.status
     };
 
-    const newAreaId = await addAffectedArea(newAreaData);
-    newArea.value.description = ''; // Clear form field after adding
-    newArea.value.area = null; // Clear selected area
-    selectedLocations.value = []; // Clear selected locations
-    newArea.value.type = null;
-    newArea.value.status = null;
-    affectedAreas.value = await getAllAffectedAreas(); // Refresh affected areas list
-    hideDialog(); // Hide dialog after adding
+    if (newArea.value.id) {
+      await updateAffectedArea(newArea.value.id, areaData);
+    } else {
+      await addAffectedArea(areaData);
+    }
+
+    affectedAreas.value = await getAllAffectedAreas();
+    hideDialog();
   } catch (error) {
-    console.error('Error adding new area: ', error);
+    console.error('Error saving area: ', error);
   }
 };
 
@@ -168,7 +198,7 @@ const addNewArea = async () => {
 const deleteArea = async (id) => {
   try {
     await deleteAffectedArea(id);
-    affectedAreas.value = affectedAreas.value.filter(area => area.id !== id); // Remove deleted area from list
+    affectedAreas.value = affectedAreas.value.filter(area => area.id !== id);
   } catch (error) {
     console.error('Error deleting area: ', error);
   }
@@ -188,6 +218,7 @@ const hideDialog = () => {
 
 // Function to clear the form fields
 const clearForm = () => {
+  newArea.value.id = null;
   newArea.value.description = '';
   newArea.value.area = null;
   selectedLocations.value = [];

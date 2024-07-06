@@ -3,11 +3,11 @@
     <!-- CSV Upload Form -->
     <form @submit.prevent="uploadCSV">
       <div class="flex justify-content-center gap-2 mb-3">
-        <Button label="Upload .csv" icon="pi pi-image" @click="triggerFileInput" />
+        <Button label="Select .csv" icon="pi pi-cloud-upload" @click="triggerFileInput" severity="secondary" outlined />
         <input type="file" ref="fileInput" accept=".csv" @change="handleFileUpload" style="display: none;" />
       </div>
       <div class="flex justify-content-center gap-2 mb-3">
-        <Button label="Submit CSV" severity="contrast" type="submit" />
+        <Button label="Upload" severity="contrast" type="submit" icon="pi pi-save" />
       </div>
       <!-- Progress spinner for loading indicator -->
       <div v-if="loading" class="flex justify-content-center gap-2 mb-3">
@@ -22,38 +22,26 @@
 
     <!-- Manual Input Form -->
     <form @submit.prevent="addLocation">
-      <div class="flex justify-content-center gap-2 mb-3">
+      <div class="flex justify-content-center gap-2 mb-5 mt-4">
         <FloatLabel>
           <InputText id="locationName" v-model="locationName" />
           <label for="locationName">Name</label>
         </FloatLabel>
       </div>
-      <div class="flex justify-content-center gap-2 mb-3">
-        <FloatLabel>
-          <InputText id="locationAddress" v-model="locationAddress" />
-          <label for="locationAddress">Address</label>
-        </FloatLabel>
-      </div>
-      <div class="flex justify-content-center gap-2 mb-3">
+      <div class="flex justify-content-center gap-2 mb-5">
         <FloatLabel>
           <InputNumber id="locationCapacity" v-model="locationCapacity" suffix=" person" />
           <label for="locationCapacity">Capacity</label>
         </FloatLabel>
       </div>
-      <div class="flex justify-content-center gap-2 mb-3">
+      <div class="flex justify-content-center gap-2 mb-5">
         <FloatLabel>
           <InputText id="locationDistrict" v-model="locationDistrict" />
           <label for="locationDistrict">District</label>
         </FloatLabel>
       </div>
-      <div class="flex justify-content-center gap-2 mb-3">
-        <FloatLabel>
-          <InputText id="locationCoordinate" v-model="locationCoordinate" />
-          <label for="locationCoordinate">Coordinate</label>
-        </FloatLabel>
-      </div>
-      <div class="flex justify-content-center gap-2 mb-3">
-        <Button label="Add" severity="contrast" type="submit" />
+      <div class="flex justify-content-center gap-2 mb-5">
+        <Button label="Add" severity="contrast" type="submit" icon="pi pi-file-plus" />
       </div>
     </form>
   </div>
