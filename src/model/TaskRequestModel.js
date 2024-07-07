@@ -1,7 +1,7 @@
 // TaskRequestModel.js
 
-import { projectAuth, projectFirestore, projectStorage } from '../firebase/config';
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, query, deleteDoc } from 'firebase/firestore';
+import { projectAuth, projectFirestore, } from '../firebase/config';
+import { collection, doc, getDoc, getDocs, updateDoc, addDoc, query, deleteDoc, serverTimestamp, where } from 'firebase/firestore';
 
 const taskRequestsCollection = collection(projectFirestore, 'taskRequests');
 
@@ -12,6 +12,28 @@ export const fetchTaskRequests = async () => {
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } catch (error) {
         console.error('Error fetching task requests:', error);
+        throw error;
+    }
+};
+
+export const fetchTaskRequestsByVolunteerID = async (volunteerID) => {
+    try {
+        const q = query(taskRequestsCollection, where("volunteerID", "==", volunteerID));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error fetching task requests by volunteer ID:', error);
+        throw error;
+    }
+};
+
+export const fetchTaskRequestsByPicID = async (pic) => {
+    try {
+        const q = query(taskRequestsCollection, where("pic", "==", pic));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error fetching task requests by PIC ID:', error);
         throw error;
     }
 };
@@ -68,7 +90,8 @@ export const addTaskRequest = async (taskRequest) => {
         const taskRequestToAdd = {
             ...taskRequest,
             volunteerID: currentUser.uid, // Use the current user's ID
-            status: "Pending"
+            status: "Pending",
+            createdAt: serverTimestamp()
         };
 
         const docRef = await addDoc(taskRequestsCollection, taskRequestToAdd);

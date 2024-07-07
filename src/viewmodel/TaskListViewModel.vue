@@ -126,8 +126,7 @@
 
                 <div class="flex justify-content-end gap-2 mb-2">
                     <Button label="Save" icon="pi pi-save" @click="handleSaveChanges" v-if="userType !== 'Volunteer'" />
-                    <Button label="Request to Join" icon="pi pi-send" @click="handleSubmitRequest"
-                        v-if="userType === 'Volunteer'" />
+                    <Button label="Request to Join" icon="pi pi-send" @click="handleSubmitRequest" />
                 </div>
                 <div class="flex justify-content-end gap-2 mb-2">
 
@@ -162,6 +161,7 @@ const displayDialog = ref(false);
 const selectedTask = ref(null);
 const editedTask = ref(null);
 const userType = ref('');
+
 
 const statusOptions = ref([
     { label: 'Ongoing', value: 'Ongoing' },
@@ -222,7 +222,10 @@ const handleSubmitRequest = async () => {
             return;
         }
         const taskID = selectedTask.value.id;
-        await addTaskRequest({ taskID });
+        const pic = selectedTask.value.pic; // Extract pic from selectedTask
+
+        // Include pic in the task request object
+        await addTaskRequest({ taskID, pic });
         console.log('Task request submitted successfully!');
     } catch (error) {
         console.error('Error submitting task request:', error);
@@ -232,7 +235,6 @@ const handleSubmitRequest = async () => {
 onMounted(async () => {
     try {
         const users = await getAllUsersFromFirestore();
-        userType.value = users.userType;
 
         officersTaskAdd.value = users.filter(user => user.userType === 'Officer');
 
@@ -243,6 +245,7 @@ onMounted(async () => {
         tasks.value = fetchedTasks;
 
         const user = await getUserFromFirestore();
+        userType.value = user.userType;
         currentUser.value = user;
 
         users.forEach(user => {

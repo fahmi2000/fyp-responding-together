@@ -3,11 +3,11 @@
         <h1>Tasks Requests</h1>
 
         <!-- Display task requests -->
-        <DataTable :value="enrichedTaskRequests" responsiveLayout="scroll">
+        <DataTable v-if="enrichedTaskRequests.length > 0" :value="enrichedTaskRequests" responsiveLayout="scroll">
             <Column field="volunteerFullName" header="Volunteer Name"></Column>
             <Column field="taskTitle" header="Task Title"></Column>
             <Column field="taskDescription" header="Task Description"></Column>
-            <Column field="requestedAt" header="Requested At"></Column>
+            <Column field="createdAt" header="Requested At"></Column>
             <Column field="status" header="Status"></Column>
             <Column header="">
                 <template #body="{ data }">
@@ -18,6 +18,7 @@
                 </template>
             </Column>
         </DataTable>
+        <p v-else>No request made.</p>
 
         <!-- Dialog for editing task request -->
         <Dialog v-model:visible="displayDialog" header="Task Request" modal :style="{ minWidth: '50rem' }">
@@ -66,8 +67,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { fetchTaskRequests, updateTaskRequest, deleteTaskRequest, fetchUserFromUsers, getUserSkillFromFirestore } from '@/model/TaskRequestModel';
+import { fetchTaskRequests, updateTaskRequest, deleteTaskRequest, fetchUserFromUsers, getUserSkillFromFirestore, fetchTaskRequestsByPicID, fetchTaskRequestsByVolunteerID } from '@/model/TaskRequestModel';
 import { fetchTaskById } from '@/model/TaskModel';
+import { getUserFromFirestore } from '@/model/UserModel';
+import { projectAuth, projectFirestore, } from '../firebase/config';
 
 const taskRequests = ref([]);
 const selectedTaskRequest = ref(null);
@@ -75,6 +78,8 @@ const editedStatus = ref();
 const displayDialog = ref(false);
 const volunteerInfo = ref(null); // To store volunteer information
 const userSkills = ref([]); // To store user skills
+const userType = ref('');
+const currentUser = ref(null);
 
 const statusOptions = [
     { label: 'Pending', value: 'Pending' },
@@ -82,15 +87,32 @@ const statusOptions = [
     { label: 'Rejected', value: 'Rejected' },
 ];
 
-// Fetch task requests on component mount
-onMounted(async () => {
+const fetchTaskRequestsHandler = async () => {
     try {
-        taskRequests.value = await fetchTaskRequests();
-        await enrichTaskRequests(); // Enrich task requests with volunteer's full name and task details
+        const currentUser = projectAuth.currentUser;
+        if (!currentUser) {
+            throw new Error('No user logged in');
+        }
+
+        const user = await getUserFromFirestore();
+        userType.value = user.userType;
+        console.log('User Type:', userType.value);
+        console.log('User Type:', currentUser.uid);
+
+        if (userType.value === 'Volunteer') {
+            taskRequests.value = await fetchTaskRequestsByVolunteerID(currentUser.uid);
+            console.log('Displaying volunteer view')
+        } else {
+            taskRequests.value = await fetchTaskRequestsByPicID(currentUser.uid);
+        }
+
+        await enrichTaskRequests(); // Enrich task requests with additional details
     } catch (error) {
         console.error('Error fetching task requests:', error);
     }
-});
+};
+
+onMounted(fetchTaskRequestsHandler);
 
 // Method to edit a task request
 const callEditTaskRequest = async (taskRequest) => {

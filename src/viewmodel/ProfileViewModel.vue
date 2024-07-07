@@ -16,15 +16,14 @@
     </div>
     <strong>Name</strong>
     <p>{{ userData.userFullName }}</p>
-
     <strong>Email</strong>
     <p>{{ userData.userEmail }}</p>
-
     <strong>Area</strong>
     <p>{{ userData.userArea }}</p>
-
     <strong>Bio</strong>
     <p>{{ userData.userBio }}</p>
+    <strong>Type</strong>
+    <p>{{ userData.userType }}</p>
 
     <!-- PrimeVue Dialog for Editing Profile -->
     <Dialog v-model:visible="visibleProfileDialog" modal header="Edit Profile" :style="{ width: '25rem' }">
@@ -43,13 +42,14 @@
       </div>
       <div class="flex align-items-center gap-3 mb-5">
         <FloatLabel>
-          <InputText id="userArea" v-model="editUserData.userArea" />
+          <Dropdown id="userArea" v-model="editUserData.userArea" :options="areaOptions" optionLabel="label"
+            optionValue="value" />
           <label for="userArea">Area</label>
         </FloatLabel>
       </div>
       <div class="flex align-items-center gap-3 mb-5">
         <FloatLabel>
-          <Textarea id="userBio" v-model="editUserData.userBio" />
+          <Textarea id="userBio" v-model="editUserData.userBio" rows="5" cols="30" />
           <label for="userBio">Bio</label>
         </FloatLabel>
       </div>
@@ -97,12 +97,21 @@ const fileInput = ref(null);
 const currentUser = projectAuth.currentUser;
 const oldPassword = ref('');
 const newPassword = ref('');
-const editUserData = reactive({
-  userFullName: '',
-  userEmail: '',
-  userArea: '',
-  userBio: ''
-});
+const editUserData = reactive({});
+
+const areaOptions = ref([
+  { label: 'Select an Area', value: null },
+  { label: 'Batu Pahat', value: 'Batu Pahat' },
+  { label: 'Johor Bahru', value: 'Johor Bahru' },
+  { label: 'Kluang', value: 'Kluang' },
+  { label: 'Kota Tinggi', value: 'Kota Tinggi' },
+  { label: 'Kulai', value: 'Kulai' },
+  { label: 'Tangkak', value: 'Tangkak' },
+  { label: 'Mersing', value: 'Mersing' },
+  { label: 'Muar', value: 'Muar' },
+  { label: 'Pontian', value: 'Pontian' },
+  { label: 'Segamat', value: 'Segamat' }
+]);
 
 onMounted(async () => {
   if (currentUser) {
