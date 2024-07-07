@@ -138,10 +138,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { addTask, fetchTasks, updateUserTask } from '@/model/TaskModel';
+import { addTask, fetchTasks, updateUserTask, addTaskToUserSubcollection } from '@/model/TaskModel';
 import { getUserFromFirestore, getAllUsersFromFirestore } from '@/model/UserModel';
 import { getAllAffectedAreas } from '@/model/AffectedAreaModel';
 import { addTaskRequest } from '@/model/TaskRequestModel';
+import { projectAuth } from '@/firebase/config';
 
 const newTaskTitle = ref('');
 const newTaskDescription = ref('');
@@ -161,6 +162,7 @@ const displayDialog = ref(false);
 const selectedTask = ref(null);
 const editedTask = ref(null);
 const userType = ref('');
+const currentUserAuth = projectAuth.currentUser;
 
 
 const statusOptions = ref([
@@ -222,7 +224,13 @@ const handleSubmitRequest = async () => {
             return;
         }
         const taskID = selectedTask.value.id;
+        console.log(taskID)
         const pic = selectedTask.value.pic; // Extract pic from selectedTask
+        const userID = currentUserAuth ? currentUserAuth.uid : null;
+
+        await addTaskToUserSubcollection(userID, taskID, {
+            feedback: ''
+        });
 
         // Include pic in the task request object
         await addTaskRequest({ taskID, pic });

@@ -5,6 +5,7 @@ import { collection, doc, getDoc, getDocs, updateDoc, addDoc, query, deleteDoc, 
 
 const taskRequestsCollection = collection(projectFirestore, 'taskRequests');
 
+
 // Fetch all task requests
 export const fetchTaskRequests = async () => {
     try {
@@ -34,6 +35,24 @@ export const fetchTaskRequestsByPicID = async (pic) => {
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } catch (error) {
         console.error('Error fetching task requests by PIC ID:', error);
+        throw error;
+    }
+};
+
+export const getTaskRequestListUID = async (volunteerID) => {
+    try {
+        const q = query(taskRequestsCollection, where('volunteerID', '==', volunteerID));
+        const snapshot = await getDocs(q);
+
+        // Map the snapshot to an array of task requests with document IDs
+        const taskRequests = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        return taskRequests;
+    } catch (error) {
+        console.error('Error fetching task requests:', error);
         throw error;
     }
 };

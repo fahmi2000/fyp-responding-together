@@ -103,6 +103,22 @@ export const getAllUsersFromFirestore = async () => {
     }
 };
 
+export const getUserFromFirestoreByID = async (pic) => {
+    try {
+        const picRef = doc(projectFirestore, 'users', pic);
+        const picDoc = await getDoc(picRef);
+
+        if (picDoc.exists()) {
+            return { id: picDoc.id, ...picDoc.data() };
+        } else {
+            throw new Error('User not found');
+        }
+    } catch (error) {
+        console.error('Error fetching user from Firestore:', error);
+        throw error;
+    }
+};
+
 export const uploadProfilePictureToFirebase = async (file, uid) => {
     const storageReference = storageRef(projectStorage, `profilePictures/${uid}`);
     await uploadBytes(storageReference, file);
@@ -195,6 +211,24 @@ export const deleteUserSkillFromFirestore = async (userId, skillId) => {
     }
 };
 
+export const getUserTaskRequests = async (userID) => {
+    try {
+        const userTasksCollection = collection(projectFirestore, 'users', userID, 'userTasks');
+        const q = query(userTasksCollection);
+        const snapshot = await getDocs(q);
+
+        // Map the snapshot to an array of tasks with document IDs
+        const tasks = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        return tasks;
+    } catch (error) {
+        console.error('Error fetching user tasks:', error);
+        throw error;
+    }
+};
 //////////////////
 
 //auth logic

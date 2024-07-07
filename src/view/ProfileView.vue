@@ -10,17 +10,7 @@
       <ProfileSkillViewModel />
     </div>
     <div class="box4">
-      <div class="flex overflow-hidden">
-        <div class="flex-none flex align-items-center justify-content-center m-2 px-5 py-3">
-          <h3>Task History</h3>
-        </div>
-        <div class="flex-none flex align-items-center justify-content-center m-2 px-5 py-3">
-          <Button label="Join Task" icon="pi pi-plus" @click="dialogVisible = true"
-            class="p-button-outlined p-button-rounded" />
-        </div>
-      </div>
-      <br>
-      No task(s) found, join a task by clicking the button above.
+      <ProfileTaskViewModel />
     </div>
   </div>
 </template>
@@ -29,6 +19,7 @@
 import Navbar from "@/components/Navbar.vue";
 import ProfileViewModel from "@/viewmodel/ProfileViewModel.vue";
 import ProfileSkillViewModel from "@/viewmodel/ProfileSkillViewModel.vue";
+import ProfileTaskViewModel from "@/viewmodel/ProfileTaskViewModel.vue";
 
 // Register components
 </script>

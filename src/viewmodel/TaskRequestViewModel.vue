@@ -7,7 +7,10 @@
             <Column field="volunteerFullName" header="Volunteer Name"></Column>
             <Column field="taskTitle" header="Task Title"></Column>
             <Column field="taskDescription" header="Task Description"></Column>
-            <Column field="createdAt" header="Requested At"></Column>
+            <Column field="createdAt" header="Requested At">
+                <template #body="slotProps">{{ new Date(slotProps.data.createdAt.seconds * 1000 +
+                    slotProps.data.createdAt.nanoseconds / 1000000).toLocaleString() }}</template>
+            </Column>
             <Column field="status" header="Status"></Column>
             <Column header="">
                 <template #body="{ data }">

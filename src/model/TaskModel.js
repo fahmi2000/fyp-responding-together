@@ -71,3 +71,19 @@ export async function updateUserTask(updatedTask) {
         throw error;
     }
 }
+
+export const addTaskToUserSubcollection = async (userID, taskID, taskData) => {
+    try {
+        const userTasksRef = collection(projectFirestore, 'users', userID, 'userTasks');
+        await addDoc(userTasksRef, {
+            taskID,
+            ...taskData,
+            feedback: '' // Set initial feedback as needed
+            // Add more fields as necessary
+        });
+        console.log('Task added to user subcollection successfully');
+    } catch (error) {
+        console.error('Error adding task to user subcollection:', error);
+        throw error;
+    }
+};

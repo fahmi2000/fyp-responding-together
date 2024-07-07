@@ -1,5 +1,5 @@
 import { projectFirestore, projectAuth } from '../firebase/config';
-import { collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp, updateDoc, getDoc } from 'firebase/firestore';
 import { getUserFromFirestore } from '@/model/UserModel';
 
 const affectedAreasCollection = collection(projectFirestore, 'affectedareas');
@@ -15,6 +15,22 @@ export async function getAllAffectedAreas() {
         return affectedAreas;
     } catch (error) {
         console.error('Error getting affected areas: ', error);
+        throw error;
+    }
+}
+
+export async function getAffectedAreaByID(areaID) {
+    try {
+        const areaDocRef = doc(affectedAreasCollection, areaID);
+        const areaDocSnapshot = await getDoc(areaDocRef);
+
+        if (areaDocSnapshot.exists()) {
+            return { id: areaDocSnapshot.id, ...areaDocSnapshot.data() };
+        } else {
+            throw new Error(`Affected area with ID ${areaID} does not exist.`);
+        }
+    } catch (error) {
+        console.error('Error getting affected area by ID:', error);
         throw error;
     }
 }
