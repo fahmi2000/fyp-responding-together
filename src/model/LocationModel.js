@@ -1,5 +1,5 @@
 import { projectFirestore, timestamp } from '../firebase/config';
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 const locationsCollection = collection(projectFirestore, 'locations');
 
@@ -50,3 +50,24 @@ const LocationModel = {
 };
 
 export default LocationModel;
+
+export const getLocationByID = async (locationID) => {
+    try {
+        console.log(`Fetching location with ID: ${locationID}`);
+
+        const docRef = doc(projectFirestore, 'locations', locationID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const locationData = { id: docSnap.id, ...docSnap.data() };
+            console.log(`Location data fetched for ID ${locationID}:`, locationData);
+            return locationData;
+        } else {
+            throw new Error('Location document not found');
+        }
+    } catch (error) {
+        console.error(`Error fetching location with ID ${locationID}:`, error);
+        throw error;
+    }
+};
+

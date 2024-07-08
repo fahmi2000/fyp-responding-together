@@ -38,22 +38,31 @@
                         <p><strong>Contact Number:</strong> {{ volunteerInfo.userContactNumber }}</p>
 
                         <div v-if="userSkills.length > 0">
-                            <h5>User Skills:</h5>
-                            <ul>
-                                <li v-for="skill in userSkills" :key="skill.id">{{ skill.skillName }} - {{
-                                    skill.skillLevel }}
-                                </li>
-                            </ul>
+                            <p><strong>User Skills:</strong></p>
+                            <Panel v-for="skill in userSkills" :key="skill.id" class="mb-3" style="width: 25rem;"
+                                toggleable>
+                                <template #header>
+                                    <strong>{{ skill.skillCategory }}</strong>
+                                </template>
+                                <p> {{ skill.skillLevel }} </p>
+                                <p> {{ skill.skillName }} </p>
+                                <p v-if="skill.certification">
+                                    <a :href="skill.certification.url" target="_blank" rel="noopener noreferrer">{{
+                                        skill.certification.name }}</a>
+                                </p>
+
+                            </Panel>
                         </div>
                     </div>
                     <div class="col">
                         <p><strong>Task ID:</strong> {{ selectedTaskRequest.taskID }}</p>
                         <p><strong>Task Title:</strong> {{ selectedTaskRequest.taskTitle }}</p>
                         <p><strong>Task Description:</strong> {{ selectedTaskRequest.taskDescription }}</p>
-                        <p><strong>Requested At:</strong> {{ selectedTaskRequest.requestedAt }}</p>
-                        <p><strong>Status:</strong> {{ selectedTaskRequest.status }}</p>
 
-
+                        <p><strong>Categories:</strong></p>
+                        <ul>
+                            <li v-for="category in selectedTaskRequest.categories" :key="category">{{ category }}</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="flex justify-content-end gap-2 mb-5">
@@ -70,10 +79,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { fetchTaskRequests, updateTaskRequest, deleteTaskRequest, fetchUserFromUsers, getUserSkillFromFirestore, fetchTaskRequestsByPicID, fetchTaskRequestsByVolunteerID } from '@/model/TaskRequestModel';
-import { fetchTaskById } from '@/model/TaskModel';
+import { updateTaskRequest, deleteTaskRequest, fetchUserFromUsers, getUserSkillFromFirestore, fetchTaskRequestsByPicID, fetchTaskRequestsByVolunteerID } from '@/model/TaskRequestModel';
+import { fetchTaskById, addVolunteerToTask } from '@/model/TaskModel';
 import { getUserFromFirestore } from '@/model/UserModel';
-import { projectAuth, projectFirestore, } from '../firebase/config';
+import { projectAuth } from '@/firebase/config';
 
 const taskRequests = ref([]);
 const selectedTaskRequest = ref(null);
@@ -99,12 +108,9 @@ const fetchTaskRequestsHandler = async () => {
 
         const user = await getUserFromFirestore();
         userType.value = user.userType;
-        console.log('User Type:', userType.value);
-        console.log('User Type:', currentUser.uid);
 
         if (userType.value === 'Volunteer') {
             taskRequests.value = await fetchTaskRequestsByVolunteerID(currentUser.uid);
-            console.log('Displaying volunteer view')
         } else {
             taskRequests.value = await fetchTaskRequestsByPicID(currentUser.uid);
         }
@@ -142,9 +148,25 @@ const callEditTaskRequest = async (taskRequest) => {
 // Method to save changes to a task request
 const saveChanges = async () => {
     if (selectedTaskRequest.value && editedStatus.value) {
-        selectedTaskRequest.value.status = editedStatus.value;
         try {
+            // Update the status of the selected task request
+            selectedTaskRequest.value.status = editedStatus.value;
             await updateTaskRequest(selectedTaskRequest.value);
+
+            // Check if the status is 'Approved' to add volunteer to the task
+            if (editedStatus.value === 'Approved') {
+                const taskId = selectedTaskRequest.value.taskID;
+                const volunteerId = selectedTaskRequest.value.volunteerID; // Ensure correct property name
+
+                if (!taskId || !volunteerId) {
+                    throw new Error('Task ID or Volunteer ID is missing.');
+                }
+
+                // Add volunteer ID to the task document's volunteerIDs array
+                await addVolunteerToTask(taskId, volunteerId);
+            }
+
+            // Reset and close dialog after successful update
             displayDialog.value = false;
             selectedTaskRequest.value = null;
         } catch (error) {
@@ -152,6 +174,7 @@ const saveChanges = async () => {
         }
     }
 };
+
 
 // Method to delete a task request
 const callDeleteTaskRequest = async (taskId) => {
@@ -183,6 +206,7 @@ const enrichTaskRequests = async () => {
             const taskInfo = await fetchTaskById(taskRequest.taskID);
             taskRequest.taskTitle = taskInfo.title;
             taskRequest.taskDescription = taskInfo.description;
+            taskRequest.categories = taskInfo.categories; // Ensure the task categories are included
         } catch (error) {
             console.error(`Error enriching task request with task info for taskID ${taskRequest.taskID}:`, error);
         }

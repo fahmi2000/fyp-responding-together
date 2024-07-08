@@ -22,41 +22,48 @@
     <p>{{ userData.userArea }}</p>
     <strong>Bio</strong>
     <p>{{ userData.userBio }}</p>
-    <strong>Type</strong>
-    <p>{{ userData.userType }}</p>
+    <strong>Contact Number</strong>
+    <p>{{ userData.userContactNumber }}</p>
 
     <!-- PrimeVue Dialog for Editing Profile -->
-    <Dialog v-model:visible="visibleProfileDialog" modal header="Edit Profile" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="visibleProfileDialog" modal header="Edit Profile" :style="{ minWidth: '25rem' }">
       <template #header>
         <div class="header-content">
           <Avatar :image="userData.profilePicture || 'default-avatar-url.png'" shape="circle" />
           <span class="user-name">{{ userData.userFullName }}</span>
         </div>
       </template>
-      <span class="p-text-secondary block mb-5">Update your information.</span>
+      <span class="p-text-secondary block mb-5">Update your profile</span>
       <div class="flex align-items-center gap-3 mb-5">
         <FloatLabel>
-          <InputText id="userFullName" v-model="editUserData.userFullName" />
+          <InputText id="userFullName" v-model="editUserData.userFullName" :style="{ minWidth: '25rem' }" />
           <label for="userFullName">Full Name</label>
         </FloatLabel>
       </div>
       <div class="flex align-items-center gap-3 mb-5">
         <FloatLabel>
+          <InputText id="userFullName" v-model="editUserData.userContactNumber" :style="{ minWidth: '25rem' }" />
+          <label for="userFullName">Contact Number</label>
+        </FloatLabel>
+      </div>
+      <div class="flex align-items-center gap-3 mb-5">
+        <FloatLabel>
           <Dropdown id="userArea" v-model="editUserData.userArea" :options="areaOptions" optionLabel="label"
-            optionValue="value" />
+            optionValue="value" :style="{ minWidth: '25rem' }" />
           <label for="userArea">Area</label>
         </FloatLabel>
       </div>
       <div class="flex align-items-center gap-3 mb-5">
         <FloatLabel>
-          <Textarea id="userBio" v-model="editUserData.userBio" rows="5" cols="30" />
+          <Textarea id="userBio" v-model="editUserData.userBio" rows="5" cols="30" :style="{ minWidth: '25rem' }" />
           <label for="userBio">Bio</label>
         </FloatLabel>
       </div>
-      <template #footer>
-        <Button label="Cancel" text severity="secondary" @click="visibleProfileDialog = false" autofocus />
-        <Button label="Save" outlined severity="secondary" @click="updateUserProfile" autofocus />
-      </template>
+      <div class="flex justify-content-end gap-3 mb-5">
+        <Button label="Cancel" text severity="danger" @click="visibleProfileDialog = false" icon="pi pi-times-circle"
+          outlined />
+        <Button label="Save" @click="updateUserProfile" icon="pi pi-save" />
+      </div>
     </Dialog>
 
     <!-- PrimeVue Dialog for Updating Account -->

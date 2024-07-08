@@ -1,6 +1,6 @@
 import { projectAuth, projectFirestore } from '../firebase/config';
-import { getUserFromFirestore } from './UserModel'; // Adjust the import path as per your project structure
-import { addDoc, serverTimestamp, getDocs, collection, getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getUserFromFirestore } from './UserModel';
+import { addDoc, serverTimestamp, getDocs, collection, getDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 const tasksCollection = collection(projectFirestore, 'tasks');
 
@@ -84,6 +84,19 @@ export const addTaskToUserSubcollection = async (userID, taskID, taskData) => {
         console.log('Task added to user subcollection successfully');
     } catch (error) {
         console.error('Error adding task to user subcollection:', error);
+        throw error;
+    }
+};
+
+export const addVolunteerToTask = async (taskId, volunteerId) => {
+    const taskRef = doc(projectFirestore, 'tasks', taskId);
+    try {
+        await updateDoc(taskRef, {
+            volunteerIDs: arrayUnion(volunteerId)
+        });
+        console.log('Volunteer added to task');
+    } catch (error) {
+        console.error('Error adding volunteer to task:', error);
         throw error;
     }
 };

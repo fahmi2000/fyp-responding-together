@@ -25,6 +25,13 @@ import ProfileTaskViewModel from "@/viewmodel/ProfileTaskViewModel.vue";
 </script>
 
 <style scoped>
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -33,10 +40,10 @@ import ProfileTaskViewModel from "@/viewmodel/ProfileTaskViewModel.vue";
     "box1 box1 box1 box1"
     "box2 box3 box4 box4"
     "box2 box3 box4 box4";
-  height: 100vh;
+  height: 100%;
   gap: 2vh;
   padding: 2vh;
-  padding: 2vw;
+  padding: 1vw;
 }
 
 .box {

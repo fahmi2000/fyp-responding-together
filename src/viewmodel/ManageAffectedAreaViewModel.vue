@@ -34,7 +34,7 @@
           slotProps.data.createdAt.nanoseconds / 1000000).toLocaleString() }}</template>
       </Column>
       <Column field="status" header="Status"></Column>
-      <Column header="Actions">
+      <Column header="" v-if="userType === 'Admin'">
         <template #body="slotProps">
           <div class="flex justify-content-start gap-2 mb-5">
             <Button icon="pi pi-pen-to-square" @click="editArea(slotProps.data)" outlined />
@@ -99,7 +99,6 @@ import { getAllAffectedAreas, addAffectedArea, deleteAffectedArea, updateAffecte
 import { getUserFromFirestore } from '@/model/UserModel';
 import LocationModel from "@/model/LocationModel"; // Adjust the path as per your project structure
 import { FilterMatchMode } from 'primevue/api';
-import Textarea from 'primevue/textarea';
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },

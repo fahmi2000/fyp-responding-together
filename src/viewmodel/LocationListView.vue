@@ -1,7 +1,7 @@
 <template>
 
   <div class="location-list-view">
-    <DataTable v-model:filters="filters" :value="locations" paginator :rows="10" dataKey="id" filterDisplay="row"
+    <DataTable v-model:filters="filters" :value="locations" paginator :rows="7" dataKey="id" filterDisplay="row"
       :loading="loading" :globalFilterFields="[
         'locationName',
         'locationAddress',
@@ -32,15 +32,15 @@
       <Column field="locationCapacity" header="Capacity" />
       <Column field="locationDistrict" header="District" />
       <!-- Edit Column -->
-      <Column header="" style="width: 3rem">
+      <Column header="" style="width: 3rem" v-if="userType === 'Admin'">
         <template #body="{ data }">
-          <Button severity="contrast" @click="handleEditShow(data)" icon="pi pi-pen-to-square" />
+          <Button severity="contrast" @click="handleEditShow(data)" icon="pi pi-pen-to-square" outlined />
         </template>
       </Column>
       <!-- Delete Column -->
-      <Column header="" style="width: 3rem">
+      <Column header="" style="width: 3rem" v-if="userType === 'Admin'">
         <template #body="{ data }">
-          <Button severity="danger" @click="deleteLocation(data.id)" icon="pi pi-trash" />
+          <Button severity="danger" @click="deleteLocation(data.id)" icon="pi pi-trash" outlined />
         </template>
       </Column>
     </DataTable>
@@ -84,6 +84,8 @@
 import { ref, onMounted } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import LocationModel from "../model/LocationModel";
+import { projectAuth } from '@/firebase/config';
+import { getUserFromFirestore } from '@/model/UserModel';
 
 const locations = ref([]);
 const filters = ref({
@@ -93,9 +95,19 @@ const filters = ref({
 });
 const loading = ref(true);
 const editingLocation = ref(null);
+const userType = ref('');
 
 onMounted(async () => {
   try {
+
+    const currentUser = projectAuth.currentUser;
+    if (!currentUser) {
+      throw new Error('No user logged in');
+    }
+
+    const user = await getUserFromFirestore();
+    userType.value = user.userType;
+
     locations.value = await LocationModel.getLocations();
   } catch (error) {
     console.error("Error fetching locations:", error);

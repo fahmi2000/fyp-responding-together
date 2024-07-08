@@ -35,32 +35,40 @@
         </div>
 
         <!-- Dialog for adding a new skill -->
-        <Dialog v-model:visible="dialogVisible" modal header="Add New Skill" :style="{ width: '30rem' }">
+        <Dialog v-model:visible="dialogVisible" modal header="Add New Skill" :style="{ minWidth: '25rem' }">
             <form @submit.prevent="addSkill">
-                <div class="p-fluid">
-                    <div class="p-field">
-                        <label for="skillName">Skill Name</label>
-                        <InputText id="skillName" v-model="currentSkill.skillName" required autocomplete="off" />
-                    </div>
-                    <div class="p-field">
-                        <label for="skillCategory">Category</label>
-                        <InputText id="skillCategory" v-model="currentSkill.skillCategory" required
-                            autocomplete="off" />
-                    </div>
-                    <div class="p-field">
-                        <label for="skillLevel">Level</label>
-                        <Dropdown id="skillLevel" v-model="currentSkill.skillLevel" :options="skillLevels"
-                            optionLabel="label" optionValue="value" required />
-                    </div>
-                    <div class="p-field">
-                        <label for="certificationFile">Upload Certification (PDF)</label>
-                        <input type="file" id="certificationFile" @change="handleFileUpload" accept="application/pdf"
-                            required />
-                    </div>
+                <div class="flex justify-content-start gap-2 mb-5 mt-4">
+                    <FloatLabel>
+                        <InputText id="skillName" v-model="currentSkill.skillName" required autocomplete="off"
+                            :style="{ minWidth: '25rem' }" />
+                        <label for="skillName">Brief Description</label>
+                    </FloatLabel>
                 </div>
-                <div class="p-dialog-footer">
-                    <Button type="button" label="Cancel" class="p-button-secondary" @click="closeDialog" />
-                    <Button type="submit" label="Add Skill" class="p-button-primary" />
+                <div class="flex justify-content-start gap-2 mb-5">
+                    <FloatLabel>
+                        <Dropdown id="skillCategory" v-model="currentSkill.skillCategory" :options="skillCategories"
+                            optionLabel="label" optionValue="value" required :style="{ minWidth: '25rem' }" />
+                        <label for="skillCategory">Category</label>
+                    </FloatLabel>
+                </div>
+
+                <div class="flex justify-content-start gap-2 mb-5">
+                    <FloatLabel>
+                        <Dropdown id="skillLevel" v-model="currentSkill.skillLevel" :options="skillLevels"
+                            optionLabel="label" optionValue="value" required :style="{ minWidth: '25rem' }" />
+                        <label for="skillLevel">Level</label>
+                    </FloatLabel>
+                </div>
+                <div class="flex justify-content-start gap-2 mb-5">
+                    <label for="certificationFile">Upload Certification (PDF)</label>
+                    <input type="file" id="certificationFile" @change="handleFileUpload" accept="application/pdf"
+                        required />
+
+                </div>
+
+                <div class="flex justify-content-end gap-2 mb-1">
+                    <Button label="Cancel" @click="closeDialog" icon="pi pi-times-circle" severity="danger" outlined />
+                    <Button type="submit" label="Add Skill" icon="pi pi-file-plus" />
                 </div>
             </form>
         </Dialog>
@@ -77,7 +85,7 @@ const userSkills = ref([]);
 const dialogVisible = ref(false);
 const currentSkill = ref({
     skillName: '',
-    skillCategory: '',
+    skillCategory: null,
     skillLevel: null, // Default value, dropdown will set this
     certification: null
 });
@@ -87,6 +95,14 @@ const skillLevels = [
     { label: 'Beginner', value: 'Beginner' },
     { label: 'Intermediate', value: 'Intermediate' },
     { label: 'Advanced', value: 'Advanced' }
+];
+
+const skillCategories = [
+    { label: 'Medical Support', value: 'Medical Support' },
+    { label: 'Logistics and Supply Management', value: 'Logistics and Supply Management' },
+    { label: 'Food and Nutrition', value: 'Food and Nutrition' },
+    { label: 'Child and Elderly Care', value: 'Child and Elderly Care' },
+    { label: 'Community Outreach and Support', value: 'Community Outreach and Support' }
 ];
 
 // Fetch user skills on component mount

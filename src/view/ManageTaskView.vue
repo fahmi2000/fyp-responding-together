@@ -31,10 +31,10 @@ import TaskRequest from "@/viewmodel/TaskRequestViewModel.vue"
         "box1 box1 box1 box1"
         "box2 box2 box3 box3"
         "box2 box2 box3 box3";
-    height: 100vh;
+    height: 100%;
     gap: 2vh;
     padding: 2vh;
-    padding: 2vw;
+    padding: 1vw;
 }
 
 .box {

@@ -3,7 +3,6 @@
         <h2>Task History</h2>
 
         <DataTable :value="userTaskRequests" responsiveLayout="scroll">
-
             <Column field="taskName" header="Task Name"></Column>
             <Column field="status" header="Status"></Column>
             <Column field="createdAt" header="Requested At">
@@ -21,15 +20,42 @@
         <!-- Dialog for detailed task view -->
         <Dialog v-model:visible="dialogVisible" :modal="true" :style="{ minWidth: '50vw' }">
             <template #header>
-                <h3>Task Details</h3>
+                <h2>Task Details</h2>
             </template>
             <div v-if="selectedTask">
-                <p><strong>Task Title:</strong> {{ selectedTask.title }}</p>
-                <p><strong>Task Description:</strong> {{ selectedTask.description }}</p>
-                <p><strong>Task Status:</strong> {{ selectedTask.status }}</p>
-                <p><strong>Affected Area:</strong> {{ selectedTask.affectedAreaID }}</p>
-                <p><strong>Officer In Charge:</strong> {{ selectedTask.pic }} <Button type="button" icon="pi pi-image"
-                        label="Image" @click="toggle" /></p>
+                <div class="flex justify-content-start gap-2 mb-1">
+                    <h3>{{ selectedTask.title }}</h3>
+                </div>
+                <div class="flex justify-content-start gap-2 mb-1">
+                    <p>{{ selectedTask.description }}</p>
+                </div>
+                <div class="flex justify-content-start gap-2 mb-1">
+                    <p><strong>Status:</strong> {{ selectedTask.status }}</p>
+                </div>
+                <div class="flex justify-content-start gap-2 mb-1">
+                    <p>
+                        <strong>Affected Area:</strong> {{ affectedAreaDetails.area }}<br>{{
+                            affectedAreaDetails.description
+                        }}
+                    </p>
+                </div>
+                <div class="flex justify-content-start gap-2 mb-1">
+                    <div v-if="affectedAreaDetails.locationIDs.length > 0">
+                        <p><strong>Evacuation Centres:</strong></p>
+                        <ul>
+                            <li v-for="locationId in affectedAreaDetails.locationIDs" :key="locationId">
+                                <span v-if="locationNames[locationId]">
+                                    <a :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationNames[locationId])}`"
+                                        target="_blank" rel="noopener noreferrer">
+                                        {{ locationNames[locationId] }}
+                                    </a>
+                                </span>
+                                <span v-else>Loading...</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
                 <OverlayPanel ref="op">
                     <p><strong>Name:</strong> {{ officerDetails.userFullName }} </p>
                     <p><strong>Email:</strong> {{ officerDetails.userEmail }} </p>
@@ -39,8 +65,10 @@
             <div v-else>
                 <p>No task selected.</p>
             </div>
-            <div class="p-dialog-footer">
-                <Button label="Close" @click="closeDialog" />
+            <div class="flex justify-content-between mb-1">
+                <span class="hidden">{{ selectedTask.pic }}</span>
+                <Button label="Officer in Charge" icon="pi pi-eye" @click="toggle" outlined />
+                <Button label="Close" @click="closeDialog" icon="pi pi-times-circle" severity="danger" outlined />
             </div>
         </Dialog>
     </div>
@@ -52,6 +80,8 @@ import { projectAuth } from '@/firebase/config';
 import { getTaskRequestListUID } from '@/model/TaskRequestModel';
 import { fetchTaskById } from '@/model/TaskModel';
 import { getUserFromFirestoreByID } from '@/model/UserModel';
+import { getAffectedAreaByID } from '@/model/AffectedAreaModel'; // Adjust path as per your project structure
+import { getLocationByID } from '@/model/LocationModel'; // Adjust path as per your project structure
 
 const userTaskRequests = ref([]);
 const dialogVisible = ref(false);
@@ -59,12 +89,13 @@ const selectedTask = ref(null);
 const currentUser = projectAuth.currentUser;
 const op = ref();
 const officerDetails = ref(null);
+const affectedAreaDetails = ref(null); // Reference for affected area details
+const locationNames = ref({}); // Object to store location names by ID
 
 const toggle = (event) => {
     op.value.toggle(event);
     if (op.value.visible) {
         fetchOfficerDetails(selectedTask.value.pic);
-        console.log("VISIBLE", selectedTask.value.pic)
     }
 }
 
@@ -92,7 +123,6 @@ const fetchOfficerDetails = async (pic) => {
     try {
         const officer = await getUserFromFirestoreByID(pic);
         officerDetails.value = officer;
-        console.log(officerDetails)
     } catch (error) {
         console.error('Error fetching officer details:', error);
     }
@@ -102,6 +132,14 @@ const openDialog = async (taskId) => {
     try {
         // Fetch detailed task information for the selected task
         selectedTask.value = await fetchTaskById(taskId);
+
+        // Fetch affected area details for the selected task
+        if (selectedTask.value.affectedAreaID) {
+            affectedAreaDetails.value = await getAffectedAreaByID(selectedTask.value.affectedAreaID);
+            // Fetch location names for each location ID in affected area
+            await fetchLocationNames(affectedAreaDetails.value.locationIDs);
+        }
+
         dialogVisible.value = true;
     } catch (error) {
         console.error('Error fetching task details:', error);
@@ -119,8 +157,29 @@ const formatTimestamp = (timestamp) => {
     }
     return 'N/A';
 };
+
+const fetchLocationNames = async (locationIDs) => {
+    try {
+        const promises = locationIDs.map(async (locationId) => {
+            const location = await getLocationByID(locationId);
+            return { id: locationId, name: location.locationName };
+        });
+
+        const results = await Promise.all(promises);
+        const names = {};
+        results.forEach((result) => {
+            names[result.id] = result.name;
+        });
+        locationNames.value = names;
+    } catch (error) {
+        console.error('Error fetching location names:', error);
+    }
+};
 </script>
 
 <style>
-/* Add your custom styles here */
+.hidden {
+    display: none;
+    /* or visibility: hidden; or opacity: 0; depending on your needs */
+}
 </style>

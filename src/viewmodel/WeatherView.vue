@@ -1,72 +1,58 @@
 <template>
   <div class="grid-container">
-    <div class="box box1">
-      <h1>Weather Forecast</h1>
-      <div class="card flex justify-content-left mt-6">
-        <FloatLabel class="w-full md:w-14rem">
-          <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" class="w-full md:w-14rem" filter />
-          <label for="city">Select a City</label>
-        </FloatLabel>
-      </div>
-      <div class="flex justify-content-left mt-6">
-        <div>
-          <FloatLabel>
-            <Calendar v-model="selectedDates" selectionMode="range" :dateFormat="dateFormat" showButtonBar />
-            <label for="selectedDates">Select Dates</label>
-          </FloatLabel>
-        </div>
-      </div>
-    </div>
     <div class="box box2">
       <div v-if="loading">
         <Skeleton width="20rem" height="20rem"></Skeleton>
       </div>
 
       <div v-else>
-        <div class="flex justify-center" style="overflow-x: auto">
-          <div v-for="date in sortedDates" :key="date" class="m-2">
-            <Card style="width: 20rem">
-              <template #title>
-                {{ formatDateTitle(date) }}
-              </template>
-              <template #content>
-                <div v-for="(forecast, index) in groupedForecasts[date]" :key="index">
-                  <p v-if="forecast.datatype === 'FGM'" class="forecast-text">
-                    MORNING - {{ forecast.value }}
-                  </p>
-                  <p v-if="forecast.datatype === 'FGA'" class="forecast-text">
-                    AFTERNOON - {{ forecast.value }}
-                  </p>
-                  <p v-if="forecast.datatype === 'FGA'" class="forecast-text">
-                    NIGHT - {{ forecast.value }}
-                  </p>
-                  <p v-if="forecast.datatype === 'FMAXT'" class="forecast-text">
-                    <span class="material-symbols-outlined icon-sm">
-                      thermometer_gain
-                    </span>
-                    {{ forecast.value }}°C
-                  </p>
-                  <p v-if="forecast.datatype === 'FMINT'" class="forecast-text">
-                    <span class="material-symbols-outlined icon-sm">
-                      thermometer_minus
-                    </span>
-                    {{ forecast.value }}°C
-                  </p>
-                  <p v-if="forecast.datatype === 'FSIGW'" class="forecast-text">
-                    <span class="pi pi-info-circle icon-sm"></span>
-                    {{ forecast.value }}
-                    <span>during {{ forecast.attributes.when }}</span>
-                  </p>
-
-                  <!-- <p>
-                    {{ getForecastLabel(forecast.datatype) }} -
-                    {{ forecast.value }}
-                  </p> -->
-                </div>
-              </template>
-            </Card>
+        <!-- Check if there are sortedDates available -->
+        <template v-if="sortedDates.length > 0">
+          <div class="flex justify-center" style="overflow-x: auto">
+            <div v-for="date in sortedDates" :key="date" class="m-2">
+              <Card style="width: 25rem">
+                <template #title>
+                  {{ formatDateTitle(date) }}
+                </template>
+                <template #content>
+                  <div v-for="(forecast, index) in groupedForecasts[date]" :key="index">
+                    <p v-if="forecast.datatype === 'FGM'" class="forecast-text">
+                      MORNING - {{ forecast.value }}
+                    </p>
+                    <p v-if="forecast.datatype === 'FGA'" class="forecast-text">
+                      AFTERNOON - {{ forecast.value }}
+                    </p>
+                    <p v-if="forecast.datatype === 'FGA'" class="forecast-text">
+                      NIGHT - {{ forecast.value }}
+                    </p>
+                    <p v-if="forecast.datatype === 'FMAXT'" class="forecast-text">
+                      <span class="material-symbols-outlined icon-sm">
+                        thermometer_gain
+                      </span>
+                      {{ forecast.value }}°C
+                    </p>
+                    <p v-if="forecast.datatype === 'FMINT'" class="forecast-text">
+                      <span class="material-symbols-outlined icon-sm">
+                        thermometer_minus
+                      </span>
+                      {{ forecast.value }}°C
+                    </p>
+                    <p v-if="forecast.datatype === 'FSIGW'" class="forecast-text">
+                      <span class="pi pi-info-circle icon-sm"></span>
+                      {{ forecast.value }}
+                      <span>during {{ forecast.attributes.when }}</span>
+                    </p>
+                  </div>
+                </template>
+              </Card>
+            </div>
           </div>
-        </div>
+        </template>
+
+        <!-- Display welcome message if no forecast data -->
+        <template v-else>
+          <h2>Welcome! Head over to your profile to update your information!</h2>
+        </template>
       </div>
     </div>
   </div>
@@ -74,55 +60,45 @@
 
 
 <script setup>
-import { ref, watchEffect, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import WeatherModel from "../model/WeatherModel";
+import { addDays, format } from 'date-fns';
 
 const loading = ref(false);
 const forecasts = ref([]);
-const cities = ref([
-  { name: "Putrajaya", locationId: 237 },
-  { name: "Kulai", locationId: 439 },
-  { name: "Johor Bahru", locationId: 124 },
-  { name: "Ayer Hitam", locationId: 122 },
-  { name: "Batu Pahat", locationId: 123 },
-  { name: "Iskandar Puteri", locationId: 659 },
-  { name: "Kluang", locationId: 129 },
-  { name: "Kota Tinggi", locationId: 130 },
-]);
-const selectedCity = ref(); // Reactive reference to store selected city
 const selectedDates = ref([]); // Reactive reference to store selected dates (range)
 
 const dateFormat = "yy-mm-dd";
 const fetchData = async () => {
   loading.value = true;
   try {
-    if (selectedCity.value && selectedDates.value.length === 2) {
-      const { locationId } = selectedCity.value;
-      const formattedStartDate = formatDate(selectedDates.value[0]);
-      const formattedEndDate = formatDate(selectedDates.value[1]);
-      const datasetId = "FORECAST";
-      const dataCategoryId = "GENERAL";
+    const today = new Date();  // Get today's date
+    const startDate = today;  // Start date is today
+    const endDate = addDays(today, 6);  // End date is 6 days later
 
-      const weatherData = await WeatherModel.fetchWeather(
-        locationId,
-        formattedStartDate,
-        formattedEndDate,
-        datasetId,
-        dataCategoryId
-      );
+    const formattedStartDate = format(startDate, 'yyyy-MM-dd');  // Format dates as yyyy-MM-dd
+    const formattedEndDate = format(endDate, 'yyyy-MM-dd');
+    const datasetId = 'FORECAST';
+    const dataCategoryId = 'GENERAL';
 
-      // Sort and group forecasts by date
-      const sortedForecasts = sortForecasts(weatherData.results);
-      forecasts.value = sortedForecasts;
-    }
+    const weatherData = await WeatherModel.fetchWeather(
+      formattedStartDate,
+      formattedEndDate,
+      datasetId,
+      dataCategoryId
+    );
+
+    // Sort and group forecasts by date
+    const sortedForecasts = sortForecasts(weatherData.results);
+    forecasts.value = sortedForecasts;
   } catch (error) {
-    console.error("Error fetching weather:", error);
+    console.error('Error fetching weather:', error);
   } finally {
     loading.value = false;
   }
 };
 
-watchEffect(() => {
+onMounted(() => {
   fetchData();
 });
 
@@ -190,39 +166,7 @@ function getForecastLabel(datatype) {
 <style scoped>
 /* Add any necessary custom styles here */
 
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* Creates two columns */
-  gap: 1rem;
-  /* Adds a gap between the grid items */
-  grid-template-areas:
-    "box1 box1"
-    "box2 box2";
-}
 
-.box1 {
-  grid-area: box1;
-}
-
-.box2 {
-  grid-area: box2;
-}
-
-.forecast-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* Creates two columns */
-  gap: 1rem;
-  /* Adds a gap between the grid items */
-}
-
-.p-card {
-  overflow-wrap: break-word;
-  /* This will break the word at the end of the line */
-  word-wrap: break-word;
-  /* For older browsers */
-}
 
 .forecast-text {
   font-size: 0.9rem;

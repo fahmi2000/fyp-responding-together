@@ -9,8 +9,8 @@ import {
     updateEmail as firebaseUpdateEmail
 } from 'firebase/auth';
 import { projectAuth, projectFirestore, projectStorage } from '../firebase/config';
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, query, deleteDoc } from 'firebase/firestore';
-import { ref as storageRef, uploadBytes, getDownloadURL, getStorage, deleteObject } from 'firebase/storage';
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, query, deleteDoc, where } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL, getStorage } from 'firebase/storage';
 import { ref } from 'vue';
 
 const user = ref()
@@ -103,6 +103,26 @@ export const getAllUsersFromFirestore = async () => {
     }
 };
 
+export const getUserSkillFromFirestoreArray = async (userIds) => {
+    try {
+        const userPromises = userIds.map(async (userId) => {
+            const userRef = doc(projectFirestore, 'users', userId);
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                return { id: userId, ...userDoc.data() };
+            } else {
+                throw new Error(`User document not found for ID: ${userId}`);
+            }
+        });
+
+        const users = await Promise.all(userPromises);
+        return users;
+    } catch (error) {
+        console.error('Error fetching users from Firestore:', error);
+        throw error;
+    }
+};
+
 export const getUserFromFirestoreByID = async (pic) => {
     try {
         const picRef = doc(projectFirestore, 'users', pic);
@@ -115,6 +135,47 @@ export const getUserFromFirestoreByID = async (pic) => {
         }
     } catch (error) {
         console.error('Error fetching user from Firestore:', error);
+        throw error;
+    }
+};
+
+export const deleteUserFromFirestore = async (userId) => {
+    try {
+        // Specify the document reference to the user document
+        const userRef = doc(projectFirestore, 'users', userId);
+
+        // Delete the document from Firestore
+        await deleteDoc(userRef);
+
+        console.log(`User with ID ${userId} deleted successfully.`);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        throw error; // Rethrow the error for handling upstream
+    }
+};
+
+export const getAllOfficers = async () => {
+    try {
+        // Construct a query to fetch all users where userType is 'Officer'
+        const q = query(collection(projectFirestore, 'users'), where('userType', '==', 'Officer'));
+
+        // Execute the query and get the query snapshot
+        const querySnapshot = await getDocs(q);
+
+        // Initialize an empty array to store officer users
+        const officers = [];
+
+        // Iterate through the query snapshot and populate the officers array
+        querySnapshot.forEach((doc) => {
+            officers.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        return officers; // Return the array of officer users
+    } catch (error) {
+        console.error('Error fetching officers:', error);
         throw error;
     }
 };

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { projectFirestore } from '../firebase/config';
+import { getUserFromFirestore } from '@/model/UserModel';
 
 const API_BASE_URL = 'https://api.met.gov.my/v2.1/data';
 const AUTH_TOKEN = '9695ad4870b6cdb202a212c05dcaeff7a48f49f1'; // Your actual authentication token
@@ -10,13 +11,21 @@ const headers = {
 };
 
 const WeatherModel = {
-    async fetchWeather(locationId, startDate, endDate, datasetId, dataCategoryId) {
-        const url = `${API_BASE_URL}?datasetid=${datasetId}&datacategoryid=${dataCategoryId}&locationid=LOCATION:${locationId}&start_date=${startDate}&end_date=${endDate}`;
-        console.log('Request URL:', url); // Log the request URL to console
-
+    async fetchWeather(startDate, endDate, datasetId, dataCategoryId) {
         try {
-            const response = await axios.get(API_BASE_URL, {
-                headers,
+            // Fetch user's profile data including userArea
+            const userData = await getUserFromFirestore();
+            const userArea = userData.userArea; // Assuming userArea is stored in userData
+
+            // Determine locationId based on userArea
+            const locationId = determineLocationId(userArea); // Declare locationId as a const
+
+            // Construct API request URL
+            const url = `${API_BASE_URL}?datasetid=${datasetId}&datacategoryid=${dataCategoryId}&locationid=LOCATION:${locationId}&start_date=${startDate}&end_date=${endDate}`;
+
+            // Make GET request to external API with headers and params
+            const response = await axios.get(url, {
+                headers: headers,  // Ensure headers are passed correctly here
                 params: {
                     datasetid: datasetId,
                     datacategoryid: dataCategoryId,
@@ -26,11 +35,14 @@ const WeatherModel = {
                 }
             });
 
-            console.log('Raw Response:', response); // Log the raw response to console
-            return response.data; // Return the fetched weather data
+            // Log the raw response for debugging
+            console.log('Raw Response:', response);
+
+            // Return the fetched weather data
+            return response.data;
         } catch (error) {
             console.error('Error fetching weather:', error);
-            throw error;
+            throw error; // Rethrow the error for handling upstream
         }
     },
 
@@ -177,5 +189,35 @@ function formatDate(dateString) {
     return `${year}-${month}-${day}`;
 }
 
+function determineLocationId(userArea) {
+    // Example mapping logic (customize as per your actual mapping)
+    switch (userArea) {
+        case 'Batu Pahat':
+            return 123;
+        case 'Johor Bahru':
+            return 124;
+        case 'Kluang':
+            return 129;
+        case 'Kota Tinggi':
+            return 130;
+        case 'Kulai':
+            return 439;
+        case 'Mersing':
+            return 131;
+        case 'Muar':
+            return 127;
+        case 'Pontian':
+            return 134;
+        case 'Segamat':
+            return 135;
+        case 'Tangkak':
+            return 126;
+
+        default:
+            throw new Error(`Location ID not found for userArea: ${userArea}`);
+    }
+}
+
 
 export default WeatherModel;
+

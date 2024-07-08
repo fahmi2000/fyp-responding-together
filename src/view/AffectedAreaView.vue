@@ -27,10 +27,10 @@ import ManageAffectedAreaViewModel from "@/viewmodel/ManageAffectedAreaViewModel
     "box1 box1 box1 box1"
     "box3 box3 box3 box3"
     "box3 box3 box3 box3";
-  height: 100vh;
+  height: 100%;
   gap: 2vh;
   padding: 2vh;
-  padding: 2vw;
+  padding: 1vw;
 }
 
 .box {
