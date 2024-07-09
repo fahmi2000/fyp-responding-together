@@ -23,26 +23,46 @@
                 <h2>Task Details</h2>
             </template>
             <div v-if="selectedTask">
-                <div class="flex justify-content-start gap-2 mb-1">
-                    <h3>{{ selectedTask.title }}</h3>
+
+                <div class="flex align-content-start gap-2 mb-2">
+                    <div>
+                        <span class="text-xs">Task Title</span><br>
+                        <span class="line-height-4">{{ selectedTask.title }}
+                        </span>
+                    </div>
                 </div>
-                <div class="flex justify-content-start gap-2 mb-1">
-                    <p>{{ selectedTask.description }}</p>
+
+                <div class="flex align-content-start gap-2 mb-2">
+                    <div>
+                        <span class="text-xs">Description</span><br>
+                        <span class="line-height-4">{{ selectedTask.description }}
+                        </span>
+                    </div>
                 </div>
-                <div class="flex justify-content-start gap-2 mb-1">
-                    <p><strong>Status:</strong> {{ selectedTask.status }}</p>
+
+                <div class="flex align-content-start gap-2 mb-2">
+                    <div>
+                        <span class="text-xs">Status</span><br>
+                        <span class="line-height-4">{{ selectedTask.status }}
+                        </span>
+                    </div>
                 </div>
-                <div class="flex justify-content-start gap-2 mb-1">
-                    <p>
-                        <strong>Affected Area:</strong> {{ affectedAreaDetails.area }}<br>{{
+
+                <div class="flex align-content-start gap-2 mb-2">
+                    <div>
+                        <span class="text-xs">Affected Area</span><br>
+                        <span class="line-height-4">{{ affectedAreaDetails.area }}<br>{{
                             affectedAreaDetails.description
                         }}
-                    </p>
+                        </span>
+                    </div>
                 </div>
+
+
                 <div class="flex justify-content-start gap-2 mb-1">
                     <div v-if="affectedAreaDetails.locationIDs.length > 0">
-                        <p><strong>Evacuation Centres:</strong></p>
-                        <ul>
+                        <span class="text-xs">Evacuation Centres</span><br>
+                        <ul class="list-decimal">
                             <li v-for="locationId in affectedAreaDetails.locationIDs" :key="locationId">
                                 <span v-if="locationNames[locationId]">
                                     <a :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationNames[locationId])}`"
@@ -56,15 +76,20 @@
                     </div>
                 </div>
 
-                <div class="feedback-section">
-                    <h3>Feedback</h3>
-                    <ul v-if="taskFeedback && taskFeedback.length > 0">
-                        <li v-for="feedback in taskFeedback" :key="feedback.id">
-                            <p><strong>User ID:</strong> {{ feedback.userID }}</p>
-                            <p>{{ feedback.text }}</p>
-                        </li>
-                    </ul>
-                    <p v-else>No feedback available.</p>
+                <div class="flex justify-content-start gap-2 mb-1">
+                    <div>
+                        <div class="flex justify-content-start align-items-center gap-2 mb-1">
+                            <span class="text-xs">Your Feedback</span><br>
+                            <Button v-if="shouldShowFeedbackButton()" label="Give Feedback" icon="pi pi-comment"
+                                @click="toggleFeedbackPanel" outlined />
+                        </div>
+                        <ul class="list-none" v-if="taskFeedback && taskFeedback.length > 0">
+                            <li v-for="feedback in taskFeedback" :key="feedback.id">
+                                <span class="line-height-4">{{ feedback.text }}</span>
+                            </li>
+                        </ul>
+                        <p v-else>No feedback available.</p>
+                    </div>
                 </div>
 
                 <OverlayPanel ref="op">
@@ -75,11 +100,11 @@
                 </OverlayPanel>
 
                 <OverlayPanel ref="op2">
-                    <div class="flex justify-content-center m-3">
-                        <p><strong>User ID:</strong> {{ currentUser.uid }}</p>
+                    <div class="flex justify-content-center m-3 hidden">
+                        <p class="hidden"><strong>User ID:</strong> {{ currentUser.uid }}</p>
                     </div>
-                    <div class="flex justify-content-center m-3">
-                        <p><strong>Task ID:</strong> {{ selectedTask.id }}</p>
+                    <div class="flex justify-content-center m-3 hidden">
+                        <p class="hidden"><strong>Task ID:</strong> {{ selectedTask.id }}</p>
                     </div>
                     <div class="flex justify-content-center m-3">
                         <FloatLabel>
@@ -87,9 +112,9 @@
                             <label for="feedbackText">Feedback</label>
                         </FloatLabel>
                     </div>
-                    <div class="flex justify-content-center m-3">
+                    <div class="flex justify-content-end m-3">
                         <!-- Pass taskID to submitFeedback function -->
-                        <Button label="Submit Feedback" @click="submitFeedback(selectedTask.id)" />
+                        <Button label="Save" @click="submitFeedback(selectedTask.id)" outlined icon="pi pi-save" />
                     </div>
                 </OverlayPanel>
 
@@ -101,8 +126,7 @@
                 <span class="hidden">{{ selectedTask.pic }}</span>
                 <Button label="Officer in Charge" icon="pi pi-eye" @click="toggle" outlined />
                 <!-- Conditionally render "Give Feedback" button -->
-                <Button v-if="shouldShowFeedbackButton()" label="Give Feedback" icon="pi pi-comment"
-                    @click="toggleFeedbackPanel" outlined />
+
                 <Button label="Close" @click="closeDialog" icon="pi pi-times-circle" severity="danger" outlined />
             </div>
         </Dialog>
