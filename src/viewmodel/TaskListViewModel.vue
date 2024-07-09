@@ -164,10 +164,6 @@
                                         || selectedTask.affectedAreaID }}</span><br>
 
                                 </div>
-
-
-
-
                             </div>
                             <div class="flex justify-content-start gap-2 mt-3">
                                 <div>
@@ -182,17 +178,32 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="flex justify-content-start gap-2 mt-3">
-                                <div>
-                                    <span class="text-xs">Approved Volunteers</span><br>
-                                    <span class="line-height-1">
-                                        <ul class="list-decimal">
-                                            <li v-for="volunteerID in editedTask.volunteerIDs" :key="volunteerID">
-                                                {{ usersDict[volunteerID]?.userFullName || volunteerID }}
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </div>
+
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <div class="flex justify-content-start gap-2 mb-3">
+                            <div>
+                                <span class="text-xs">Approved Volunteers</span><br>
+                                <span class="line-height-1">
+                                    <ul class="list-decimal">
+                                        <li v-for="volunteerID in editedTask.volunteerIDs" :key="volunteerID">
+                                            {{ usersDict[volunteerID]?.userFullName || volunteerID }}
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex justify-content-start gap-2 mb-3">
+                            <div>
+                                <span class="text-xs">Feedbacks</span><br>
+                                <ul v-if="feedback.length > 0" class="list-decimal">
+                                    <li v-for="fb in feedback" :key="fb.id">
+                                        {{ fb.text }}
+                                    </li>
+                                </ul>
+                                <p v-else>No feedback available for this task.</p>
                             </div>
                         </div>
                     </div>
@@ -212,7 +223,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import { addTask, fetchTasks, updateUserTask, addTaskToUserSubcollection } from '@/model/TaskModel';
+import { addTask, fetchTasks, updateUserTask, addTaskToUserSubcollection, fetchTaskFeedbackByTaskID } from '@/model/TaskModel';
 import { getUserFromFirestore, getAllUsersFromFirestore, getUserSkillFromFirestoreArray } from '@/model/UserModel';
 import { getAllAffectedAreas } from '@/model/AffectedAreaModel';
 import { addTaskRequest } from '@/model/TaskRequestModel';
@@ -237,6 +248,8 @@ const areasDict = ref({});
 const displayDialog = ref(false);
 const selectedTask = ref(null);
 const editedTask = ref(null);
+const feedback = ref([]);
+
 const userType = ref('');
 const currentUserAuth = projectAuth.currentUser;
 
@@ -289,11 +302,20 @@ const handleAddTask = async () => {
 };
 
 // Method to handle showing edit dialog
-const handleEditShow = (task) => {
-    selectedTask.value = task;
-    editedTask.value = { ...task };
-    editedCategories.value = task.categories; // Populate the categories field
-    displayDialog.value = true;
+const handleEditShow = async (task) => {
+    try {
+        selectedTask.value = task;
+        editedTask.value = { ...task };
+        editedCategories.value = task.categories; // Populate the categories field
+        displayDialog.value = true;
+
+        // Fetch feedback for the selected task
+        const taskId = task.id; // Assuming taskID is the correct property name
+        console.log("taskid:", task.id)
+        feedback.value = await fetchTaskFeedbackByTaskID(taskId);
+    } catch (error) {
+        console.error('Error handling edit show:', error);
+    }
 };
 
 // Method to handle saving changes to a task
@@ -388,6 +410,7 @@ onMounted(async () => {
 
         // Fetch tasks
         tasks.value = await fetchTasks();
+        console.log("task value", tasks.value);
 
         // Fetch current user data
         const user = await getUserFromFirestore();
@@ -403,9 +426,11 @@ onMounted(async () => {
         volunteerUsers.forEach(volunteer => {
             usersDict.value[volunteer.id] = volunteer;
         });
+
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 });
+
 
 </script>

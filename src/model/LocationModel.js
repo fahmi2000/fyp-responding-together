@@ -53,14 +53,12 @@ export default LocationModel;
 
 export const getLocationByID = async (locationID) => {
     try {
-        console.log(`Fetching location with ID: ${locationID}`);
 
         const docRef = doc(projectFirestore, 'locations', locationID);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             const locationData = { id: docSnap.id, ...docSnap.data() };
-            console.log(`Location data fetched for ID ${locationID}:`, locationData);
             return locationData;
         } else {
             throw new Error('Location document not found');

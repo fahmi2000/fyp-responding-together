@@ -56,11 +56,43 @@
                     </div>
                 </div>
 
+                <div class="feedback-section">
+                    <h3>Feedback</h3>
+                    <ul v-if="taskFeedback && taskFeedback.length > 0">
+                        <li v-for="feedback in taskFeedback" :key="feedback.id">
+                            <p><strong>User ID:</strong> {{ feedback.userID }}</p>
+                            <p>{{ feedback.text }}</p>
+                        </li>
+                    </ul>
+                    <p v-else>No feedback available.</p>
+                </div>
+
                 <OverlayPanel ref="op">
                     <p><strong>Name:</strong> {{ officerDetails.userFullName }} </p>
                     <p><strong>Email:</strong> {{ officerDetails.userEmail }} </p>
                     <p><strong>Number:</strong> {{ officerDetails.userContactNumber }} </p>
+
                 </OverlayPanel>
+
+                <OverlayPanel ref="op2">
+                    <div class="flex justify-content-center m-3">
+                        <p><strong>User ID:</strong> {{ currentUser.uid }}</p>
+                    </div>
+                    <div class="flex justify-content-center m-3">
+                        <p><strong>Task ID:</strong> {{ selectedTask.id }}</p>
+                    </div>
+                    <div class="flex justify-content-center m-3">
+                        <FloatLabel>
+                            <InputText v-model="feedbackForm.feedbackText" />
+                            <label for="feedbackText">Feedback</label>
+                        </FloatLabel>
+                    </div>
+                    <div class="flex justify-content-center m-3">
+                        <!-- Pass taskID to submitFeedback function -->
+                        <Button label="Submit Feedback" @click="submitFeedback(selectedTask.id)" />
+                    </div>
+                </OverlayPanel>
+
             </div>
             <div v-else>
                 <p>No task selected.</p>
@@ -68,6 +100,9 @@
             <div class="flex justify-content-between mb-1">
                 <span class="hidden">{{ selectedTask.pic }}</span>
                 <Button label="Officer in Charge" icon="pi pi-eye" @click="toggle" outlined />
+                <!-- Conditionally render "Give Feedback" button -->
+                <Button v-if="shouldShowFeedbackButton()" label="Give Feedback" icon="pi pi-comment"
+                    @click="toggleFeedbackPanel" outlined />
                 <Button label="Close" @click="closeDialog" icon="pi pi-times-circle" severity="danger" outlined />
             </div>
         </Dialog>
@@ -78,7 +113,7 @@
 import { ref, onMounted } from 'vue';
 import { projectAuth } from '@/firebase/config';
 import { getTaskRequestListUID } from '@/model/TaskRequestModel';
-import { fetchTaskById } from '@/model/TaskModel';
+import { fetchTaskById, updateTaskFeedback, fetchTaskFeedbackByID } from '@/model/TaskModel';
 import { getUserFromFirestoreByID } from '@/model/UserModel';
 import { getAffectedAreaByID } from '@/model/AffectedAreaModel'; // Adjust path as per your project structure
 import { getLocationByID } from '@/model/LocationModel'; // Adjust path as per your project structure
@@ -88,9 +123,11 @@ const dialogVisible = ref(false);
 const selectedTask = ref(null);
 const currentUser = projectAuth.currentUser;
 const op = ref();
+const op2 = ref();
 const officerDetails = ref(null);
 const affectedAreaDetails = ref(null); // Reference for affected area details
 const locationNames = ref({}); // Object to store location names by ID
+const taskFeedback = ref([]);
 
 const toggle = (event) => {
     op.value.toggle(event);
@@ -98,6 +135,51 @@ const toggle = (event) => {
         fetchOfficerDetails(selectedTask.value.pic);
     }
 }
+
+const toggleFeedbackPanel = (event) => {
+    op2.value.toggle(event);
+    // Additional logic if needed when opening the feedback panel
+}
+
+const shouldShowFeedbackButton = () => {
+    if (!selectedTask.value || !selectedTask.value.status) {
+        return false;
+    }
+
+    // Check if task request status is approved and task status is completed
+    const isTaskRequestApproved = userTaskRequests.value.some(req => req.taskID === selectedTask.value.id && req.status === 'Approved');
+    const isTaskCompleted = selectedTask.value.status === 'Completed';
+
+    console.log(isTaskRequestApproved, isTaskCompleted)
+    return isTaskRequestApproved && isTaskCompleted;
+}
+
+const feedbackForm = ref({
+    feedbackText: ''
+});
+
+const submitFeedback = async (taskID) => {
+    try {
+        // Assuming currentUser and feedbackForm are available within the setup function
+        const userID = currentUser.uid;
+        const feedbackText = feedbackForm.value.feedbackText;
+
+        console.log("task id:", taskID, "userID: ", userID, "feedback:", feedbackText)
+
+        // Call updateTaskFeedback function to add feedback
+        const result = await updateTaskFeedback(taskID, userID, feedbackText);
+
+        if (result) {
+            console.log('Feedback submitted successfully!');
+            // Optionally, reset the form or perform any other actions after successful submission
+            feedbackForm.feedbackText = '';
+        } else {
+            console.error('Failed to submit feedback.');
+        }
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+    }
+};
 
 onMounted(async () => {
     try {
@@ -132,6 +214,7 @@ const openDialog = async (taskId) => {
     try {
         // Fetch detailed task information for the selected task
         selectedTask.value = await fetchTaskById(taskId);
+        console.log("selected value:", selectedTask.value.id)
 
         // Fetch affected area details for the selected task
         if (selectedTask.value.affectedAreaID) {
@@ -139,6 +222,8 @@ const openDialog = async (taskId) => {
             // Fetch location names for each location ID in affected area
             await fetchLocationNames(affectedAreaDetails.value.locationIDs);
         }
+
+        taskFeedback.value = await fetchTaskFeedbackByID(taskId, currentUser.uid);
 
         dialogVisible.value = true;
     } catch (error) {

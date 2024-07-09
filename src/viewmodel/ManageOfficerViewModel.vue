@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="card flex justify-content-center">
-
       <Dialog v-model:visible="visible" modal header="Add Officer" :style="{ minWidth: '25rem' }">
         <template #header>
           <div class="inline-flex align-items-right justify-content-center gap-2">
