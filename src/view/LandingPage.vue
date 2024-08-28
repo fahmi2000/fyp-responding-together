@@ -20,9 +20,6 @@
       </div>
       <div v-else class="auth-container">
         <div style="text-align: center; padding-bottom: 20px;">
-          <h2 class="brand-title">
-            Create an Account
-          </h2>
         </div>
         <CreateAccountViewModel @signup-success="handleSignupSuccess" />
         <p style="text-align: center">

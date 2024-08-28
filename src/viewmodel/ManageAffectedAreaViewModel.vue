@@ -95,9 +95,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAllAffectedAreas, addAffectedArea, deleteAffectedArea, updateAffectedArea } from '@/model/AffectedAreaModel'; // Adjust the path as per your project structure
+import { getAllAffectedAreas, addAffectedArea, deleteAffectedArea, updateAffectedArea } from '@/model/AffectedAreaModel';
 import { getUserFromFirestore } from '@/model/UserModel';
-import LocationModel from "@/model/LocationModel"; // Adjust the path as per your project structure
+import LocationModel from "@/model/LocationModel";
 import { FilterMatchMode } from 'primevue/api';
 
 const filters = ref({
@@ -119,16 +119,39 @@ const userType = ref('');
 // Options for the dropdown
 const areaOptions = ref([
   { label: 'Select an Area', value: null },
-  { label: 'Batu Pahat', value: 'Batu Pahat' },
-  { label: 'Johor Bahru', value: 'Johor Bahru' },
-  { label: 'Kluang', value: 'Kluang' },
-  { label: 'Kota Tinggi', value: 'Kota Tinggi' },
-  { label: 'Kulai', value: 'Kulai' },
-  { label: 'Tangkak', value: 'Tangkak' },
-  { label: 'Mersing', value: 'Mersing' },
-  { label: 'Muar', value: 'Muar' },
-  { label: 'Pontian', value: 'Pontian' },
-  { label: 'Segamat', value: 'Segamat' }
+  { label: 'Bagan', value: 'Bagan' },
+  { label: 'Chaah Bahru', value: 'Chaah Bahru' },
+  { label: 'Kampung Bahru', value: 'Kampung Bahru' },
+  { label: 'Linau', value: 'Linau' },
+  { label: 'Lubok', value: 'Lubok' },
+  { label: 'Minyak Beku', value: 'Minyak Beku' },
+  { label: 'Peserai', value: 'Peserai' },
+  { label: 'Sri Gading', value: 'Sri Gading' },
+  { label: 'Sri Medan', value: 'Sri Medan' },
+  { label: 'Simpang Kanan', value: 'Simpang Kanan' },
+  { label: 'Simpang Kiri', value: 'Simpang Kiri' },
+  { label: 'Sungai Kluang', value: 'Sungai Kluang' },
+  { label: 'Sungai Punggor', value: 'Sungai Punggor' },
+  { label: 'Tanjung Sembrong', value: 'Tanjung Sembrong' },
+  { label: 'Mukim Jelutong', value: 'Mukim Jelutong' },
+  { label: 'Mukim Plentong', value: 'Mukim Plentong' },
+  { label: 'Mukim Pulai', value: 'Mukim Pulai' },
+  { label: 'Mukim Sungai Tiram', value: 'Mukim Sungai Tiram' },
+  { label: 'Mukim Tanjung Kupang', value: 'Mukim Tanjung Kupang' },
+  { label: 'Mukim Tebrau', value: 'Mukim Tebrau' },
+  { label: 'Bandar Johor Bahru', value: 'Bandar Johor Bahru' },
+  { label: 'Bandar Tebrau', value: 'Bandar Tebrau' },
+  { label: 'Mukim Ulu Benut', value: 'Mukim Ulu Benut' },
+  { label: 'Mukim Kahang', value: 'Mukim Kahang' },
+  { label: 'Mukim Kluang', value: 'Mukim Kluang' },
+  { label: 'Mukim Layang-Layang', value: 'Mukim Layang-Layang' },
+  { label: 'Mukim Machap', value: 'Mukim Machap' },
+  { label: 'Mukim Niyor', value: 'Mukim Niyor' },
+  { label: 'Mukim Paloh', value: 'Mukim Paloh' },
+  { label: 'Mukim Renggam', value: 'Mukim Renggam' },
+  { label: 'Bandar Kluang', value: 'Bandar Kluang' },
+  { label: 'Bandar Paloh', value: 'Bandar Paloh' },
+  { label: 'Bandar Renggam', value: 'Bandar Renggam' }
 ]);
 
 const typeOptions = ref([

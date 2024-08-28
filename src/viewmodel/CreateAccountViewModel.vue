@@ -13,6 +13,14 @@
           <label for="email">Email</label>
         </FloatLabel>
       </div>
+
+      <div class="flex justify-content-center gap-2 mb-5">
+        <FloatLabel>
+          <InputText id="email" v-model="email" required />
+          <label for="email">Contact Number</label>
+        </FloatLabel>
+      </div>
+
       <div class="flex justify-content-center gap-2 mb-5">
         <FloatLabel>
           <Password id="password" v-model="password" required feedback />
